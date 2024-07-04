@@ -65,6 +65,17 @@ fun makeTypeClass(name: String, astClass: AstClass): TypeClass {
     return ret
 }
 
+fun calculateMemberOffsets() {
+    for(cls in allTypeClass) {
+        var offset = 0
+        for(member in cls.members) {
+            if (member is SymbolMember) {
+                member.offset = offset
+                offset += member.type.getSize()
+            }
+        }
+    }
+}
 
 fun makeTypeError(location: Location, message:String) : TypeError {
     Log.error(location, message)
@@ -87,7 +98,9 @@ fun Type.isTypeCompatible(rhs:Symbol): Boolean {
 // ================================================================
 // Create a Block with symbols for the predefined types
 
+val lengthSymbol = SymbolMember("length", TypeInt, false)
 val predefinedSymbols = createPredefinedBlock()
+
 private fun createPredefinedBlock() : Map<String,Symbol> {
     val ret = mutableMapOf<String,Symbol>()
     for(type in listOf( TypeUnit, TypeBool, TypeChar, TypeShort, TypeInt, TypeReal, TypeString))
@@ -95,6 +108,7 @@ private fun createPredefinedBlock() : Map<String,Symbol> {
     ret["null"] = SymbolTypeName("null", TypeNull)
     ret["true"] = SymbolIntLit("true", TypeBool, 1)
     ret["false"] = SymbolIntLit("false", TypeBool, 0)
+    lengthSymbol.offset = -4
     return ret
 }
 

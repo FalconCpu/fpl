@@ -1,0 +1,73 @@
+class MemMappedRegs ()          # Read/Write
+    var sevenSegDisplay : Int    # W        6 digit hex display
+    var leds : Int               # W        10 leds
+    var mouseX : Int             # R
+    var mouseY : Int             # R
+    var mouseButtons : Int       # R
+    var uartTx : Int             # R        Read:number of slots free in UART TX Fifo
+                                 # W        Transmit a byte over the fifo
+    var uartRx : Int             # R        Byte of data read from UART, or -1 if no data received
+    var screenBlank: Int         # W        Bit 8=1 to blank screen, bits 7:0 gives color
+    var screenAddress : Int      # W        Address of screen display
+    var sevenSegBrightness : Int # W       Brightnes of 7 segment display 0=off 255=max brightness
+    var keyboard  : Int          # R
+    var reserved1 : Int
+    var reserved2 : Int
+    var reserved3 : Int
+    var reserved4 : Int
+    var reserved5 : Int
+    var gpuX : Int
+    var gpuY : Int
+    var gpuWidth : Int
+    var gpuHeight : Int
+    var gpuPatternAddress : Int
+    var gpuPatternWidth : Int
+    var gpuPatternDepth : Int
+    var gpuColor0 : Int
+    var gpuColor1 : Int
+    var gpuCommand : Int
+    var gpuClipX1 : Int
+    var gpuClipY1 : Int
+    var gpuClipX2 : Int
+    var gpuClipY2 : Int
+
+const GPU_COMMAND_IDLE = 0
+const GPU_COMMAND_SOLID_RECT = 1
+const GPU_COMMAND_PATTERNED_RECT = 2
+
+fun kPrintChar(c:Char)
+    val hwRegs = (0E0000000H:MemMappedRegs)
+    # busy wait until TX is free
+    while hwRegs.uartTx=0
+        val dummy=0
+    hwRegs.uartTx = (c:Int)
+
+fun kPrintString(str:String)
+    for index in 0..<str.length
+        kPrintChar(str[index])
+
+#fun kPrintHex(var a:Int)
+#    for index in 0..<8
+#        val digit = (a >> 28) & 0FH
+#        if digit<=9
+#            kPrintChar((digit+'0' : Char))
+#        else
+#            kPrintChar((digit+'A'-10 : Char))
+#        a = a << 4
+
+#fun kPrintInt(var a:Int)
+#    if (a<0)
+#        kPrintChar('-')
+#        a = -a
+#    val buf = Char[16]
+#    var index = 0
+#    repeat
+#        buf[index] = (a % 10 + '0' : Char)
+#        index = index + 1
+#        a = a / 10
+#    until a = 0
+#    while index>=1
+#        index = index - 1
+#        kPrintChar(buf[index])
+
+

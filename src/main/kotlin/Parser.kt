@@ -58,6 +58,11 @@ class Parser(private val lexer: Lexer) {
     private fun parseBracket() : Ast {
         expect(OPENB)
         val ret = parseExpression()
+        if (canTake(COLON)) {
+            val type = parseType()
+            val loc = expect(CLOSEB)
+            return AstCast(loc.location, ret, type)
+        }
         expect(CLOSEB)
         return ret
     }
@@ -233,6 +238,17 @@ class Parser(private val lexer: Lexer) {
         block.add( AstDecl(id.location, kind.kind, id.text, type, expr))
     }
 
+    private fun parseConst(block: AstBlock) {
+        expect(CONST)
+        val id = expect(ID)
+        val type = parseOptType()
+        expect(EQ)
+        val expr = parseExpression()
+        expectEol()
+        block.add(AstConst(id.location, id.text, type, expr))
+    }
+
+
     private fun parseAssign(block: AstBlock){
         val lhs = parsePostfix()
 
@@ -332,6 +348,21 @@ class Parser(private val lexer: Lexer) {
         checkEnd(WHILE)
     }
 
+    private fun parseFor(block: AstBlock) {
+        val f = expect(FOR)
+        val id = expect(ID)
+        expect(IN)
+        val expr1 = parseExpression()
+        expect(DOTDOT)
+        val includeEnd = canTake(LT)
+        val expr2 = parseExpression()
+        expectEol()
+        val stmt = AstFor(f.location, block, id.text, expr1, expr2, includeEnd)
+        block.add(stmt)
+        parseBlock(stmt)
+        checkEnd(FOR)
+    }
+
     private fun parseClause(block: AstBlock) : AstClause{
         val cond = parseExpression()
         expectEol()
@@ -363,12 +394,14 @@ class Parser(private val lexer: Lexer) {
     private fun parseStatement(block: AstBlock) {
         when(lookahead.kind) {
             VAR, VAL -> parseDecl(block)
+            CONST -> parseConst(block)
             ID, OPENB -> parseAssign(block)
             WHILE -> parseWhile(block)
             IF -> parseIf(block)
             FUN -> parseFun(block)
             RETURN -> parseReturn(block)
             CLASS -> parseClass(block)
+            FOR -> parseFor(block)
             else -> throw ParseError(lookahead.location,"Got '$lookahead' when expecting statement")
         }
     }

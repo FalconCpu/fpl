@@ -15,7 +15,7 @@ class AstTop(
     }
 
     override fun add(statement: Ast) {
-        if (statement !is AstDecl && statement !is AstFunction && statement !is AstClass)
+        if (statement !is AstDecl && statement !is AstFunction && statement !is AstClass && statement !is AstConst)
             Log.error(statement.location, "Invalid statement in top level")
         statements += statement
     }

@@ -4,65 +4,34 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a8bd9f8f-5dbe-4fed-83b8-7e923d2dc766" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/cody_history.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Ast.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstArrayType.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstAssign.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstBinop.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstBlock.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstCharLit.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstClass.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstClause.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstDecl.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstFuncCall.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstFuncType.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstFunction.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstId.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstIf.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstIndex.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstIntLit.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstMember.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstParam.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstQmark.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstReturn.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstStringLit.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstTop.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstWhile.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/CodeBlock.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/CompEval.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Instr.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Label.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Lexer.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Livemap.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Location.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Log.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/ParseError.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Parser.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Peephole.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/RegisterAllocator.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Symbol.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Token.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Type.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/LexerTest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/ParserTest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/PeepholeTest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/RegisterAllocatorTest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/TypeCheck.kt" afterDir="false" />
+    <list default="true" id="a8bd9f8f-5dbe-4fed-83b8-7e923d2dc766" name="Changes" comment="Progressing">
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstCast.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstConst.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstFor.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/GenAssembly.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/stdlib/MemMappedRegs.fpl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/kotlin/GenAssemblyTest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/kotlin/StdLibTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/cody_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cody_history.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstBinop.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstBinop.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstBlock.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstBlock.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstClass.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstClass.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstDecl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstDecl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstId.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstId.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstIndex.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstIndex.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstIntLit.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstIntLit.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstMember.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstMember.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstTop.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstTop.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/CodeBlock.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/CodeBlock.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/CompEval.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/CompEval.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Parser.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Parser.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Symbol.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Symbol.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Type.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Type.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/ParserTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/ParserTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/TypeCheck.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/TypeCheck.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,6 +84,7 @@
     "Downloaded.Files.Path.Enabled": "false",
     "Gradle.Build fpl.executor": "Run",
     "Gradle.RegisterAllocatorTest.sumArray.executor": "Run",
+    "Gradle.StdLibTest.kPrintStringTest.executor": "Run",
     "Gradle.Tests in 'fpl.test'.executor": "Run",
     "Gradle.TypeCheck.simpleDeclarations.executor": "Run",
     "Gradle.Upgrade Gradle wrapper.executor": "Run",
@@ -135,7 +105,7 @@
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/simon/Downloads/Sourcegraph-6.0.3.zip",
     "onboarding.tips.debug.path": "C:/Users/simon/IdeaProjects/fpl/src/main/kotlin/Main.kt",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+    "settings.editor.selected.configurable": "project.kotlinCompiler"
   },
   "keyToStringList": {
     "kotlin-gradle-user-dirs": [
@@ -151,7 +121,7 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.Tests in 'fpl.test'">
+  <component name="RunManager" selected="Gradle.StdLibTest.kPrintStringTest">
     <configuration name="RegisterAllocatorTest.sumArray" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -166,6 +136,30 @@
             <option value=":test" />
             <option value="--tests" />
             <option value="&quot;RegisterAllocatorTest.sumArray&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="StdLibTest.kPrintStringTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;StdLibTest.kPrintStringTest&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -224,6 +218,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.StdLibTest.kPrintStringTest" />
         <item itemvalue="Gradle.Tests in 'fpl.test'" />
         <item itemvalue="Gradle.RegisterAllocatorTest.sumArray" />
         <item itemvalue="Gradle.TypeCheck.simpleDeclarations" />
@@ -239,7 +234,20 @@
       <option name="presentableId" value="Default" />
       <updated>1719914434903</updated>
     </task>
+    <task id="LOCAL-00001" summary="Progressing">
+      <option name="closed" value="true" />
+      <created>1720016051752</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1720016051752</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Progressing" />
+    <option name="LAST_COMMIT_MESSAGE" value="Progressing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

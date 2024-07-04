@@ -5,14 +5,14 @@ class AstId(location: Location, private val name:String) : Ast(location) {
     }
 
     override fun codeGenExpression(cb: CodeBlock, context: AstBlock): Symbol {
-        val ret = context.lookup(name)
+        val ret = context.lookup(location, name)
         if (ret is SymbolTypeName)
             return makeSymbolError(location, "Cannot use type name as expression")
         return ret
     }
 
     override fun codeGenLValue(cb: CodeBlock, context: AstBlock, value: Symbol) {
-        val symbol = context.lookup(name)
+        val symbol = context.lookup(location, name)
         if (!symbol.type.isTypeCompatible(value))
             Log.error(location, "Cannot assign value of type ${value.type} to variable of type ${symbol.type}")
 
@@ -43,7 +43,7 @@ class AstId(location: Location, private val name:String) : Ast(location) {
     }
 
     override fun resolveType(context: AstBlock): Type {
-        val sym = context.lookup(name)
+        val sym = context.lookup(location, name)
         if (sym is SymbolError || sym is SymbolTypeName)
             return sym.type
         return makeTypeError(location,"Not a type")

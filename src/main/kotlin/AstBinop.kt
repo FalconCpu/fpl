@@ -21,6 +21,9 @@ class AstBinop(
         if (op==null)
             return makeSymbolError(location, "No operation defined for ${l.type} $kind ${r.type}")
 
+        if (l is SymbolIntLit && r is SymbolIntLit)
+            return compEval(op.outOp, l, r)
+
         val ret = cb.newTemp(op.outType)
         cb.add( InstrAlu(op.outOp, ret, l, r))
         return ret

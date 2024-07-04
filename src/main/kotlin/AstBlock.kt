@@ -12,10 +12,10 @@ sealed class AstBlock (
         symbolTable[symbol.name] = symbol
     }
 
-    fun lookup(name:String) : Symbol {
+    fun lookup(location:Location, name:String) : Symbol {
         return predefinedSymbols[name]
             ?: symbolTable[name]
-            ?: parent?.lookup(name)
+            ?: parent?.lookup(location, name)
             ?: run {
                 val ret = makeSymbolError(location, "Symbol '$name' not found")
                 symbolTable[name] = ret

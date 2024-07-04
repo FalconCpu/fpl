@@ -13,10 +13,18 @@ class AstIndex(
     override fun codeGenExpression(cb: CodeBlock, context: AstBlock): Symbol {
         val r = rhs.codeGenExpression(cb, context)
         val l = lhs.codeGenExpression(cb, context)
-        if (l.type !is TypeArray)
-            return makeSymbolError(lhs.location, "index lhs must be an array not ${l.type}")
         if (!TypeInt.isTypeCompatible(r))
             return makeSymbolError(rhs.location, "array index must be an int not ${r.type}")
+
+        if (l.type is TypeString) {
+            val ret = cb.newTemp(TypeChar)
+            val i2 = cb.addAluOp(AluOp.ADD_I, l, r)
+            cb.add(InstrLoad(1, ret, i2, symbolZero))
+            return ret
+        }
+
+        if (l.type !is TypeArray)
+            return makeSymbolError(lhs.location, "index lhs must be an array not ${l.type}")
         val ret = cb.newTemp(l.type.base)
         val size = ret.type.getSize()
         val i1 = cb.addAluOp(AluOp.MUL_I, r, makeSymbolIntLit(size))

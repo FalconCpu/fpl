@@ -12,6 +12,13 @@ class AstMember (
     override fun codeGenExpression(cb: CodeBlock, context: AstBlock): Symbol {
         val l = lhs.codeGenExpression(cb, context)
         if (l.type is TypeError) return l
+
+        if (l.type is TypeString && name == "length") {
+            val ret = cb.newTemp(TypeInt)
+            cb.add(InstrLoad(4, ret, l, lengthSymbol))
+            return ret
+        }
+
         if (l.type !is TypeClass)
             return makeSymbolError(lhs.location, "Got type ${l.type} when expecting a class")
         val sym = l.type.members.find { it.name == name } ?: return makeSymbolError(
@@ -27,6 +34,7 @@ class AstMember (
     override fun codeGenLValue(cb: CodeBlock, context: AstBlock, value: Symbol) {
         val l = lhs.codeGenExpression(cb, context)
         if (l.type is TypeError) return
+
         if (l.type !is TypeClass) {
             Log.error(lhs.location, "Got type ${l.type} when expecting a class")
             return

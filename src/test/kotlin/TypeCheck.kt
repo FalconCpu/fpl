@@ -561,8 +561,9 @@ class TypeCheck {
                           Animal
             *****************************************************
             START
-            ST4 %2, %1[name]
-            ST4 %3, %1[legs]
+            MOV this, %1
+            ST4 %2, this[name]
+            ST4 %3, this[legs]
             END
 
             *****************************************************
@@ -600,5 +601,74 @@ class TypeCheck {
         """.trimIndent()
         runTest(prog,expected)
     }
+
+    @Test
+    fun constTest() {
+        val prog = """
+            const one = 1
+                
+            fun main()->Int
+                return 3 + one
+                
+        """.trimIndent()
+
+        val expected = """
+            *****************************************************
+                          TopLevel
+            *****************************************************
+
+            *****************************************************
+                          main
+            *****************************************************
+            START
+            MOV %8, 4
+            JMP @0
+            @0:
+            END
+
+
+        """.trimIndent()
+        runTest(prog,expected)
+    }
+
+    @Test
+    fun forLoop() {
+        val prog = """
+            fun main()->Int
+                var total = 0
+                for i in 1..10
+                    total = total + i
+                return total
+        """.trimIndent()
+
+        val expected = """
+            *****************************************************
+                          TopLevel
+            *****************************************************
+
+            *****************************************************
+                          main
+            *****************************************************
+            START
+            MOV total, 0
+            MOV i, 1
+            JMP @1
+            @2:
+            ADD_I &0, total, i
+            MOV total, &0
+            ADD_I i, i, 1
+            @1:
+            BLT_I i, 10, @2
+            MOV %8, total
+            JMP @0
+            @0:
+            END
+
+
+        """.trimIndent()
+        runTest(prog,expected)
+    }
+
+
 
 }

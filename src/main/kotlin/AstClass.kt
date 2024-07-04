@@ -8,6 +8,7 @@ class AstClass (
     lateinit var type : TypeClass
     lateinit var params: List<Symbol>            // Parameters for the constructor
     private val codeBlock = newCodeBlock(name)   // Code block for the constructor
+    lateinit var thisSym : SymbolLocalVar
 
     override fun dump(sb: StringBuilder, indent: Int) {
         sb.append("  ".repeat(indent) + "CLASS $name\n")
@@ -30,6 +31,12 @@ class AstClass (
 
     fun identifyMembers(context: AstBlock) {
         codeBlock.add (InstrStart())
+
+        thisSym = SymbolLocalVar("this", type, false)
+        codeBlock.add(thisSym)
+        add(location,thisSym)
+        codeBlock.add(InstrMov(thisSym, codeBlock.getReg(1)))
+
         val params = mutableListOf<Symbol>()
         for ((index, param) in astParams.withIndex()) {
             val symbol = param.createMemberSymbol(context)
@@ -39,7 +46,7 @@ class AstClass (
                 codeBlock.add(symbol)
                 codeBlock.add(InstrMov(symbol, codeBlock.getReg(index + 2)))
             } else {
-                codeBlock.add(InstrStore(symbol.type.getSize(), codeBlock.getReg(index + 2), codeBlock.getReg(1), symbol))
+                codeBlock.add(InstrStore(symbol.type.getSize(), codeBlock.getReg(index + 2), thisSym, symbol))
                 type.members += symbol
             }
         }
@@ -48,7 +55,7 @@ class AstClass (
             if (statement is AstFunction)
                 statement.identifyFunctions(this)
             else if (statement is AstDecl)
-                TODO()
+                statement.codeGenMember(codeBlock, this)
         }
 
         codeBlock.add(InstrEnd(emptyList()))

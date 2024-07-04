@@ -10,7 +10,7 @@ class AstIntLit (
     override fun codeGenExpression(cb: CodeBlock, context: AstBlock): Symbol {
         return try {
             if (text.endsWith('H', ignoreCase = true))
-                makeSymbolIntLit(text.dropLast(1).toInt(16), TypeInt)
+                makeSymbolIntLit(text.dropLast(1).toLong(16).toInt(), TypeInt)
             else
                 makeSymbolIntLit(text.toInt(), TypeInt)
         } catch (e: NumberFormatException) {

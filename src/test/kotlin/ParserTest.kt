@@ -407,6 +407,61 @@ class ParserTest {
         runTest(prog,expected)
     }
 
+    @Test
+    fun constTest() {
+        val prog = """
+            const one = 1
+                
+            fun main()->Int
+                return 3 + one
+                
+        """.trimIndent()
+
+        val expected = """
+            TOP
+              CONST one
+                INTLIT 1
+              FUNC main
+                ID Int
+                RETURN
+                  +
+                    INTLIT 3
+                    ID one
+
+        """.trimIndent()
+        runTest(prog,expected)
+    }
+
+    @Test
+    fun forLoop() {
+        val prog = """
+            fun main()->Int
+                var total = 0
+                for i in 1..10
+                    total = total + i
+                return total
+        """.trimIndent()
+
+        val expected = """
+            TOP
+              FUNC main
+                ID Int
+                var total
+                  INTLIT 0
+                FOR i
+                  INTLIT 1
+                  INTLIT 10
+                  ASSIGN
+                    ID total
+                    +
+                      ID total
+                      ID i
+                RETURN
+                  ID total
+
+        """.trimIndent()
+        runTest(prog,expected)
+    }
 
 
 }

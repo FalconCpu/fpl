@@ -10,13 +10,19 @@ class SymbolLocalVar(name: String, type: Type, val mutable:Boolean)
     : Symbol(name, type)
 
 class SymbolGlobalVar(name: String, type: Type, val mutable:Boolean)
-    : Symbol(name, type)
+    : Symbol(name, type)  {
+    var offset = 0
+}
 
 class SymbolMember(name: String, type: Type, val mutable:Boolean)
-    : Symbol(name, type)
+    : Symbol(name, type) {
+        var offset = 0
+    }
 
 class SymbolIntLit(name:String, type: Type, val value:Int)
-    : Symbol(name, type)
+    : Symbol(name, type) {
+        override fun toString() = value.toString()
+    }
 
 class SymbolStringLit(name:String, type: Type, val value:String)
     : Symbol(name, type)

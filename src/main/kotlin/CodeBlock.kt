@@ -34,9 +34,15 @@ class CodeBlock(val name:String) {
         return temp
     }
 
-    fun addAluOp(op: AluOp, lhs:Symbol, rhs:Symbol) : Symbol {
-        val dest = newTemp(lhs.type)
+    fun addAluOp(op: AluOp, lhs:Symbol, rhs:Symbol, type: Type=lhs.type) : Symbol {
+        val dest = newTemp(type)
         add(InstrAlu(op, dest, lhs, rhs))
+        return dest
+    }
+
+    fun addNewTemp(src: Symbol, type:Type=src.type) : Symbol {
+        val dest = newTemp(type)
+        add(InstrMov(dest, src))
         return dest
     }
 
@@ -64,4 +70,7 @@ class CodeBlock(val name:String) {
     }
 
     fun getReg(index:Int) = allSymbolReg[index]
+
+    fun getThis() =
+        symbols.find { it.name == "this" } ?: error("No 'this' symbol found")
 }

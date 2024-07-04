@@ -28,4 +28,18 @@ class AstDecl (
             cb.add( InstrMov(symbol, rhs))
         }
     }
+
+    fun codeGenMember(cb: CodeBlock, context: AstClass) {
+        val rhs = init?.codeGenExpression(cb, context)
+        val type = type?.resolveType(context) ?: rhs?.type ?: makeTypeError(location, "Cannot determine type of $name")
+        val mutable = kind == TokenKind.VAR
+        val symbol = SymbolMember(name, type, mutable)
+        context.add(location, symbol)
+        context.type.members += symbol
+        if (rhs != null) {
+            if (!symbol.type.isTypeCompatible(rhs))
+                Log.error(location, "Cannot assign value of type ${rhs.type} to variable of type ${symbol.type}")
+            cb.add(InstrStore(rhs.type.getSize(), symbol, context.thisSym, symbol))
+        }
+    }
 }

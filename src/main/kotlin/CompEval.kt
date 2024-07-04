@@ -1,44 +1,28 @@
 
 fun compEval(op: AluOp, lhs: SymbolIntLit, rhs:SymbolIntLit) : SymbolIntLit {
+    val l = lhs.value
+    val r = rhs.value
+
     val v = when (op) {
-        AluOp.NOP -> TODO()
-        AluOp.ADD_I -> TODO()
-        AluOp.SUB_I -> TODO()
-        AluOp.MUL_I -> TODO()
-        AluOp.DIV_I -> TODO()
-        AluOp.MOD_I -> TODO()
-        AluOp.AND_I -> TODO()
-        AluOp.OR_I -> TODO()
-        AluOp.XOR_I -> TODO()
-        AluOp.EQ_I -> TODO()
-        AluOp.NE_I -> TODO()
-        AluOp.LT_I -> TODO()
-        AluOp.GT_I -> TODO()
-        AluOp.LTE_I -> TODO()
-        AluOp.GTE_I -> TODO()
-        AluOp.LSL_I -> TODO()
-        AluOp.LSR_I -> TODO()
-        AluOp.ASR_I -> TODO()
-        AluOp.ADD_R -> TODO()
-        AluOp.SUB_R -> TODO()
-        AluOp.MUL_R -> TODO()
-        AluOp.DIV_R -> TODO()
-        AluOp.MOD_R -> TODO()
-        AluOp.EQ_R -> TODO()
-        AluOp.NE_R -> TODO()
-        AluOp.LT_R -> TODO()
-        AluOp.GT_R -> TODO()
-        AluOp.LTE_R -> TODO()
-        AluOp.GTE_R -> TODO()
-        AluOp.ADD_S -> TODO()
-        AluOp.EQ_S -> TODO()
-        AluOp.NE_S -> TODO()
-        AluOp.LT_S -> TODO()
-        AluOp.GT_S -> TODO()
-        AluOp.LTE_S -> TODO()
-        AluOp.GTE_S -> TODO()
-        AluOp.AND_B -> TODO()
-        AluOp.OR_B -> TODO()
+        AluOp.NOP -> 0
+        AluOp.ADD_I -> l + r
+        AluOp.SUB_I -> l - r
+        AluOp.MUL_I -> l * r
+        AluOp.DIV_I -> l / r
+        AluOp.MOD_I -> l % r
+        AluOp.AND_I -> l and r
+        AluOp.OR_I -> l or r
+        AluOp.XOR_I -> l xor r
+        AluOp.EQ_I -> if (l == r) 1 else 0
+        AluOp.NE_I -> if (l != r) 1 else 0
+        AluOp.LT_I -> if (l < r) 1 else 0
+        AluOp.GT_I -> if (l > r) 1 else 0
+        AluOp.LTE_I -> if (l <= r) 1 else 0
+        AluOp.GTE_I -> if (l >= r) 1 else 0
+        AluOp.LSL_I -> l shl r
+        AluOp.LSR_I -> l ushr r
+        AluOp.ASR_I -> l shr r
+        else -> error("Unsupported op")
     }
     return makeSymbolIntLit(v)
 }
