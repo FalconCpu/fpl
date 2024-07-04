@@ -40,3 +40,10 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/a.f32
+/debug.log
+/labels.txt
+/out.bin
+/rom.hex
+/sim_regs.log
+/sim_uart.log

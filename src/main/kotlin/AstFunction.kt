@@ -20,21 +20,20 @@ class AstFunction (
     override fun codeGenStatement(cb: CodeBlock, context:AstBlock) {
         for(statement in statements)
             statement.codeGenStatement(codeBlock, this)
-        codeBlock.add(InstrLabel(endLabel))
+        codeBlock.addLabel(endLabel)
         val retval = if (retType is TypeUnit) emptyList() else listOf(codeBlock.getReg(8))
-        codeBlock.add(InstrEnd(retval))
+        codeBlock.addEnd(retval)
     }
 
     fun identifyFunctions(context: AstBlock) {
         retType = astRetType?.resolveType(context) ?: TypeUnit
-        codeBlock.add (InstrStart())
         val params = mutableListOf<Symbol>()
         for((index,param) in astParams.withIndex()) {
             val symbol = param.createSymbol(context)
             params += symbol
             add(param.location, symbol)
             codeBlock.add(symbol)
-            codeBlock.add(InstrMov(symbol, codeBlock.getReg(index+1)))
+            codeBlock.addMov(symbol, codeBlock.getReg(index+1))
         }
 
         this.params = params

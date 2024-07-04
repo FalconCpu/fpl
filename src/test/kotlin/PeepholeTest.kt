@@ -25,6 +25,8 @@ class PeepholeTest {
             *****************************************************
                           TopLevel
             *****************************************************
+            START
+            END
 
             *****************************************************
                           sum
@@ -33,17 +35,18 @@ class PeepholeTest {
             MOV array, %1
             MOV sum, 0
             MOV index, 0
-            JMP @1
-            @3:
-            LSL_I &1, index, 2
-            ADD_I &2, array, &1
-            LD4 &0, &2[0]
-            ADD_I &3, sum, &0
+            @1:
+            MOV &5, 10
+            BGTE_I index, &5, @3
+            LSL_I &0, index, 2
+            ADD_I &1, array, &0
+            LDW &2, &1[0]
+            ADD_I &3, sum, &2
             MOV sum, &3
             ADD_I &4, index, 1
             MOV index, &4
-            @1:
-            BLT_I index, 10, @3
+            JMP @1
+            @3:
             MOV %8, sum
             END
 

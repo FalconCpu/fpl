@@ -132,7 +132,7 @@ class Parser(private val lexer: Lexer) {
         var ret = parseAdd()
         while(lookahead.kind in listOf(EQ,NEQ,LT,LTE,GT,GTE)) {
             val op = nextToken()
-            ret = AstBinop(op.location, op.kind, ret, parseAdd())
+            ret = AstComp(op.location, op.kind, ret, parseAdd())
         }
         return ret
     }

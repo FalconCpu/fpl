@@ -17,8 +17,8 @@ abstract class Ast (val location: Location) {
         val r = codeGenExpression(cb, context)
         if (!TypeBool.isTypeCompatible(r))
             Log.error(location, "Condition must be of type bool not '${r.type}'")
-        cb.add( InstrBra(AluOp.NE_I, labTrue, r, symbolZero))
-        cb.add( InstrJmp(labFalse))
+        cb.addBranch( AluOp.NE_I, labTrue, r, symbolZero)
+        cb.addJump( labFalse)
     }
 
     open fun resolveType(context: AstBlock): Type {

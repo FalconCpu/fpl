@@ -11,50 +11,61 @@ class AstMember (
 
     override fun codeGenExpression(cb: CodeBlock, context: AstBlock): Symbol {
         val l = lhs.codeGenExpression(cb, context)
-        if (l.type is TypeError) return l
+        return when (val lt = cb.pathState.getType(l)) {
+            is TypeError -> l
 
-        if (l.type is TypeString && name == "length") {
-            val ret = cb.newTemp(TypeInt)
-            cb.add(InstrLoad(4, ret, l, lengthSymbol))
-            return ret
-        }
+            is TypeString ->
+                if (name == "length")
+                    cb.addLoad(TypeInt, l, lengthSymbol)
+                else
+                    makeSymbolError(location, "Cannot access member $name of string")
 
-        if (l.type !is TypeClass)
-            return makeSymbolError(lhs.location, "Got type ${l.type} when expecting a class")
-        val sym = l.type.members.find { it.name == name } ?: return makeSymbolError(
-            location,"Member $name not found in class ${l.type}" )
-        val ret = cb.newTemp(sym.type)
-        when (sym) {
-            is SymbolMember -> cb.add(InstrLoad(sym.type.getSize(), ret, l, sym))
-            else -> Log.error(location, "Invalid field $name for member access")
+            is TypeNullable ->
+                if (lt.base is TypeClass)
+                    makeSymbolError(location, "Cannot access member as reference could be null")
+                else
+                    makeSymbolError(lhs.location, "Got type ${l.type} when expecting a class")
+
+            is TypeClass -> {
+                val sym = lt.members.find { it.name == name } ?: return makeSymbolError(
+                    location,"Member $name not found in class $lt" )
+                return when (sym) {
+                    is SymbolMember -> cb.addLoad(sym.type, l, sym)
+                    else -> makeSymbolError(location, "Invalid field $name for member access")
+                }
+            }
+
+            else ->
+                makeSymbolError(lhs.location, "Got type $lt when expecting a class")
         }
-        return ret
     }
 
     override fun codeGenLValue(cb: CodeBlock, context: AstBlock, value: Symbol) {
         val l = lhs.codeGenExpression(cb, context)
-        if (l.type is TypeError) return
+        when (val lt = cb.pathState.getType(l)) {
+            is TypeError -> {}
+            is TypeNullable ->
+                if (lt.base is TypeClass)
+                    Log.error(location, "Cannot access member as reference could be null")
+                else
+                    Log.error(lhs.location, "Got type ${l.type} when expecting a class")
 
-        if (l.type !is TypeClass) {
-            Log.error(lhs.location, "Got type ${l.type} when expecting a class")
-            return
-        }
-        val sym = l.type.members.find { it.name == name } ?: run {
-            Log.error(location, "Member $name not found in class ${l.type}")
-            return
-        }
-        if (!sym.type.isTypeCompatible(value)) {
-            Log.error(location, "Cannot assign value of type ${value.type} to field of type ${sym.type}")
-            return
-        }
+            is TypeClass -> {
+                val sym = lt.members.find { it.name == name }
+                if (sym==null)
+                    return Log.error(location,"Member $name not found in class $lt" )
+                when (sym) {
+                    is SymbolMember -> {
+                        if (!sym.mutable)
+                            Log.error(location, "Cannot assign to immutable field $name")
+                        cb.addStore(sym.type, value, l, sym)
+                    }
+                    else -> makeSymbolError(location, "Invalid field $name for member access")
+                }
+            }
 
-        when (sym) {
-            is SymbolMember -> {
-                if (!sym.mutable)
-                    Log.error(location, "Cannot assign to immutable field $name")
-                cb.add(InstrStore(sym.type.getSize(), value, l, sym))
-            }
-            else -> Log.error(location, "Invalid field $name for member access")
-            }
+            else ->
+                makeSymbolError(lhs.location, "Got type $lt when expecting a class")
+        }
     }
 }

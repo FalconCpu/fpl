@@ -25,7 +25,7 @@ class AstDecl (
         if (rhs != null) {
             if (!symbol.type.isTypeCompatible(rhs))
                 Log.error(location, "Cannot assign value of type ${rhs.type} to variable of type ${symbol.type}")
-            cb.add( InstrMov(symbol, rhs))
+            cb.addMov( symbol, rhs)
         }
     }
 
@@ -39,7 +39,7 @@ class AstDecl (
         if (rhs != null) {
             if (!symbol.type.isTypeCompatible(rhs))
                 Log.error(location, "Cannot assign value of type ${rhs.type} to variable of type ${symbol.type}")
-            cb.add(InstrStore(rhs.type.getSize(), symbol, context.thisSym, symbol))
+            cb.addStore(rhs.type, rhs, context.thisSym, symbol)
         }
     }
 }

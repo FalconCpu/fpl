@@ -9,8 +9,6 @@ class AstStringLit (
 
     override fun codeGenExpression(cb: CodeBlock, context: AstBlock): Symbol {
         val symbolStringLit = makeSymbolStringLit(text)
-        val ret = cb.newTemp(TypeString)
-        cb.add( InstrLea(ret,symbolStringLit))
-        return ret
+        return cb.addLea(TypeString, symbolStringLit)
     }
 }

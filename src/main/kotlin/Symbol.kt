@@ -4,6 +4,8 @@ sealed class Symbol (val name:String, val type:Type) {
     val use = mutableListOf<Instr>()
 
     override fun toString() = name
+
+    open fun dependsOn(other: Symbol) = other==this
 }
 
 class SymbolLocalVar(name: String, type: Type, val mutable:Boolean)
@@ -33,8 +35,13 @@ class SymbolFunction(name:String, type: Type, val function: AstFunction)
 class SymbolTypeName(name:String, type: Type)
     : Symbol(name, type)
 
-class SymbolTemp(name: String, type: Type)
-    : Symbol(name, type)
+class SymbolTemp(name: String, type: Type, private val expression: Expression)
+    : Symbol(name, type) {
+
+    override fun dependsOn(other: Symbol): Boolean {
+        return other==this || expression.lhs.dependsOn(other) || expression.rhs.dependsOn(other)
+    }
+}
 
 class SymbolError
     : Symbol("<ERROR>", TypeError)

@@ -48,6 +48,11 @@ private fun InstrAlu.genAssembly() : String = when(op) {
     AluOp.GTE_S,
     AluOp.AND_B,
     AluOp.OR_B -> error("Should have been lowered before genAssembly")
+
+    AluOp.B -> TODO()
+    AluOp.H -> TODO()
+    AluOp.W -> TODO()
+    AluOp.MOV -> TODO()
 }
 
 private fun InstrBra.genAssembly() : String = when (op) {
@@ -87,7 +92,7 @@ private fun Instr.genAssembly() = when(this) {
 
 
     is InstrLoad -> {
-        val op = if (size==1) "ldb" else if (size==2) "ldh" else if (size==4) "ldw" else error("Invalid size")
+        val op = if (size==AluOp.B) "ldb" else if (size==AluOp.H) "ldh" else if (size==AluOp.W) "ldw" else error("Invalid size")
         val of = when (offset) {
             is SymbolMember -> offset.offset
             is SymbolGlobalVar -> offset.offset
@@ -99,7 +104,7 @@ private fun Instr.genAssembly() = when(this) {
     is InstrNop -> "nop"
     is InstrStart -> ""
     is InstrStore -> {
-        val op = if (size==1) "stb" else if (size==2) "sth" else if (size==4) "stw" else error("Invalid size")
+        val op = if (size==AluOp.B) "stb" else if (size==AluOp.H) "sth" else if (size==AluOp.W) "stw" else error("Invalid size")
         val of = when (offset) {
             is SymbolMember -> offset.offset
             is SymbolGlobalVar -> offset.offset

@@ -23,6 +23,7 @@ class AstTop(
     fun generateIR() {
         for (statement in statements)
             statement.codeGenStatement(codeBlock, this)
+        codeBlock.addEnd(emptyList())
     }
 
     fun dumpIR(): String {

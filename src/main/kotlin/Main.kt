@@ -30,6 +30,7 @@ fun compile( files:List<Lexer>, stopAt: StopAt) : String {
     if (stopAt == StopAt.IR)
         return top.dumpIR()
 
+    allCodeBlocks.forEach { it.legalize() }
     allCodeBlocks.forEach { Peephole(it).run() }
     if (stopAt == StopAt.PEEPHOLE)
         return top.dumpIR()

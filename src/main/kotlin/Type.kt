@@ -11,6 +11,7 @@ object TypeReal   : Type("Real")
 object TypeString : Type("String")
 object TypeError  : Type("<Error>")
 object TypeUnit   : Type("Unit")
+object TypeAddress : Type("<Address>")
 
 class TypeArray(val base:Type)
     : Type("$base[]")
@@ -88,7 +89,7 @@ fun Type.isTypeCompatible(rhs:Symbol): Boolean {
         return true
 
     if (this is TypeNullable)
-        return this.base.isTypeCompatible(rhs)
+        return rhs.type is TypeNull || base.isTypeCompatible(rhs)
 
     return false
 }
@@ -105,7 +106,7 @@ private fun createPredefinedBlock() : Map<String,Symbol> {
     val ret = mutableMapOf<String,Symbol>()
     for(type in listOf( TypeUnit, TypeBool, TypeChar, TypeShort, TypeInt, TypeReal, TypeString))
         ret[type.toString()] = SymbolTypeName(type.toString(), type)
-    ret["null"] = SymbolTypeName("null", TypeNull)
+    ret["null"] = SymbolIntLit("null", TypeNull, 0)
     ret["true"] = SymbolIntLit("true", TypeBool, 1)
     ret["false"] = SymbolIntLit("false", TypeBool, 0)
     lengthSymbol.offset = -4
@@ -126,6 +127,7 @@ fun Type.getSize(): Int = when (this) {
     TypeInt -> 4
     TypeReal -> 8
     TypeString -> 4
+    TypeAddress -> 4
     is TypeArray -> 4
     is TypeFunction -> 4
     is TypeNullable -> 4

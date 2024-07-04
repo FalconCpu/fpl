@@ -4,33 +4,39 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a8bd9f8f-5dbe-4fed-83b8-7e923d2dc766" name="Changes" comment="Progressing">
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstCast.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstConst.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstFor.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/GenAssembly.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/stdlib/MemMappedRegs.fpl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/GenAssemblyTest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/StdLibTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/cody_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cody_history.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
+    <list default="true" id="a8bd9f8f-5dbe-4fed-83b8-7e923d2dc766" name="Changes" comment="Can now compile to assembler">
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstComp.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Expression.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Legalize.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/PathState.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Ast.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Ast.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstBinop.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstBinop.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstBlock.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstBlock.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstCast.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstCast.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstClass.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstClass.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstDecl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstDecl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstFor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstFor.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstFuncCall.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstFuncCall.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstFunction.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstFunction.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstId.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstId.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstIf.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstIf.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstIndex.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstIndex.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstIntLit.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstIntLit.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstMember.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstMember.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstReturn.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstReturn.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstStringLit.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstStringLit.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstTop.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstTop.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstWhile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstWhile.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/CodeBlock.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/CodeBlock.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/CompEval.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/CompEval.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/GenAssembly.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/GenAssembly.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Instr.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Instr.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Parser.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Parser.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Symbol.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Symbol.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Type.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Type.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/ParserTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/ParserTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/GenAssemblyTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/GenAssemblyTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/PeepholeTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/PeepholeTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/RegisterAllocatorTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/RegisterAllocatorTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/TypeCheck.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/TypeCheck.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -86,6 +92,7 @@
     "Gradle.RegisterAllocatorTest.sumArray.executor": "Run",
     "Gradle.StdLibTest.kPrintStringTest.executor": "Run",
     "Gradle.Tests in 'fpl.test'.executor": "Run",
+    "Gradle.TypeCheck.nullableType3.executor": "Run",
     "Gradle.TypeCheck.simpleDeclarations.executor": "Run",
     "Gradle.Upgrade Gradle wrapper.executor": "Run",
     "Kotlin.MainKt.executor": "Run",
@@ -121,7 +128,7 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.StdLibTest.kPrintStringTest">
+  <component name="RunManager" selected="Gradle.Tests in 'fpl.test'">
     <configuration name="RegisterAllocatorTest.sumArray" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -192,6 +199,30 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="TypeCheck.nullableType3" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;TypeCheck.nullableType3&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
     <configuration name="TypeCheck.simpleDeclarations" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -218,8 +249,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.StdLibTest.kPrintStringTest" />
         <item itemvalue="Gradle.Tests in 'fpl.test'" />
+        <item itemvalue="Gradle.TypeCheck.nullableType3" />
+        <item itemvalue="Gradle.StdLibTest.kPrintStringTest" />
         <item itemvalue="Gradle.RegisterAllocatorTest.sumArray" />
         <item itemvalue="Gradle.TypeCheck.simpleDeclarations" />
       </list>
@@ -242,19 +274,28 @@
       <option name="project" value="LOCAL" />
       <updated>1720016051752</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Can now compile to assembler">
+      <option name="closed" value="true" />
+      <created>1720070788269</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1720070788269</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Progressing" />
-    <option name="LAST_COMMIT_MESSAGE" value="Progressing" />
+    <MESSAGE value="Can now compile to assembler" />
+    <option name="LAST_COMMIT_MESSAGE" value="Can now compile to assembler" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/src/main/kotlin/AstTop.kt</url>
-          <line>28</line>
+          <line>29</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

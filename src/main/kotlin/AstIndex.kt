@@ -17,20 +17,16 @@ class AstIndex(
             return makeSymbolError(rhs.location, "array index must be an int not ${r.type}")
 
         if (l.type is TypeString) {
-            val ret = cb.newTemp(TypeChar)
-            val i2 = cb.addAluOp(AluOp.ADD_I, l, r)
-            cb.add(InstrLoad(1, ret, i2, symbolZero))
-            return ret
+            val i2 = cb.addAluOp(AluOp.ADD_I, l, r, TypeInt)
+            return cb.addLoad(TypeChar, i2, symbolZero)
         }
 
         if (l.type !is TypeArray)
             return makeSymbolError(lhs.location, "index lhs must be an array not ${l.type}")
-        val ret = cb.newTemp(l.type.base)
-        val size = ret.type.getSize()
-        val i1 = cb.addAluOp(AluOp.MUL_I, r, makeSymbolIntLit(size))
-        val i2 = cb.addAluOp(AluOp.ADD_I, l, i1)
-        cb.add(InstrLoad(size, ret, i2, symbolZero))
-        return ret
+        val type = l.type.base
+        val offset = cb.addAluOp(AluOp.MUL_I, r, makeSymbolIntLit(type.getSize()), TypeInt)
+        val addr = cb.addAluOp(AluOp.ADD_I, l, offset, TypeAddress)
+        return cb.addLoad(type, addr, symbolZero)
     }
 
     override fun codeGenLValue(cb: CodeBlock, context: AstBlock, value: Symbol) {
@@ -42,9 +38,9 @@ class AstIndex(
         }
         if (!TypeInt.isTypeCompatible(r))
             Log.error(rhs.location, "array index must be an int not ${r.type}")
-        val size = l.type.base.getSize()
-        val i1 = cb.addAluOp(AluOp.MUL_I, r, makeSymbolIntLit(size))
-        val i2 = cb.addAluOp(AluOp.ADD_I, l, i1)
-        cb.add(InstrStore(size, value, i2, symbolZero))
+        val type = l.type.base
+        val offset = cb.addAluOp(AluOp.MUL_I, r, makeSymbolIntLit(type.getSize()), TypeInt)
+        val addr = cb.addAluOp(AluOp.ADD_I, l, offset, TypeAddress)
+        cb.addStore(type, value, addr, symbolZero)
     }
 }

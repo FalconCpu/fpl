@@ -10,28 +10,41 @@ class AstIf(
 
     override fun codeGenStatement(cb: CodeBlock, context: AstBlock) {
         val clauseLabels = mutableListOf<Label>()
+        val clauseStates = mutableListOf<PathState>()
         val endLabel = cb.newLabel()
+
         for(clause in clauses) {
             if (clause.condition != null) {
                 val nextClauseLabel = cb.newLabel()
                 val thisLabel = cb.newLabel()
                 clauseLabels += thisLabel
+                cb.pathStateTrue = cb.pathState
+                cb.pathStateFalse = cb.pathState
                 clause.condition.codeGenBranch(cb, context, thisLabel, nextClauseLabel)
-                cb.add(InstrLabel(nextClauseLabel))
+                clauseStates += cb.pathStateTrue
+                cb.pathState = cb.pathStateFalse
+                cb.addLabel(nextClauseLabel)
             } else {
-                clause.codeGenStatement(cb, context)
+                clauseStates += cb.pathState
+                val thisLabel = cb.newLabel()
+                clauseLabels += thisLabel
+                cb.addJump(thisLabel)
             }
         }
-        cb.add(InstrJmp(endLabel))
+        cb.addJump(endLabel)
 
+        val outStates = mutableListOf<PathState>()
+        if (clauses.none { it.condition == null })  // If there is no else clause, then allow for fall-through
+            outStates += cb.pathState
         for((index,clause) in clauses.withIndex()) {
-            if (clause.condition == null)
-                break
-            cb.add( InstrLabel(clauseLabels[index]))
+            cb.addLabel( clauseLabels[index])
+            cb.pathState = clauseStates[index]
             clause.codeGenStatement(cb, context)
-            cb.add(InstrJmp(endLabel))
+            outStates += cb.pathState
+            cb.addJump(endLabel)
         }
 
-        cb.add(InstrLabel(endLabel))
+        cb.addLabel(endLabel)
+        cb.pathState = joinState(outStates)
     }
 }

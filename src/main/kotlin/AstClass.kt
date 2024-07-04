@@ -30,12 +30,10 @@ class AstClass (
     }
 
     fun identifyMembers(context: AstBlock) {
-        codeBlock.add (InstrStart())
-
         thisSym = SymbolLocalVar("this", type, false)
         codeBlock.add(thisSym)
         add(location,thisSym)
-        codeBlock.add(InstrMov(thisSym, codeBlock.getReg(1)))
+        codeBlock.addMov(thisSym, codeBlock.getReg(1))
 
         val params = mutableListOf<Symbol>()
         for ((index, param) in astParams.withIndex()) {
@@ -44,9 +42,9 @@ class AstClass (
             add(param.location, symbol)
             if (symbol is SymbolLocalVar) {
                 codeBlock.add(symbol)
-                codeBlock.add(InstrMov(symbol, codeBlock.getReg(index + 2)))
+                codeBlock.addMov(symbol, codeBlock.getReg(index + 2))
             } else {
-                codeBlock.add(InstrStore(symbol.type.getSize(), codeBlock.getReg(index + 2), thisSym, symbol))
+                codeBlock.addStore(symbol.type, codeBlock.getReg(index + 2), thisSym, symbol)
                 type.members += symbol
             }
         }
@@ -58,7 +56,7 @@ class AstClass (
                 statement.codeGenMember(codeBlock, this)
         }
 
-        codeBlock.add(InstrEnd(emptyList()))
+        codeBlock.addEnd(emptyList())
     }
 
     override fun codeGenStatement(cb: CodeBlock, context: AstBlock) {

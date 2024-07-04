@@ -27,15 +27,16 @@ class GenAssemblyTest {
             sum:
             ld %8, 0
             ld %2, 0
-            jmp .@1
-            .@3:
+            .@1:
+            ld %3, 10
+            bge %2, %3, .@3
             lsl %3, %2, 2
             add %3, %1, %3
             ldw %3, %3[0]
             add %8, %8, %3
             add %2, %2, 1
-            .@1:
-            blt %2, 10, .@3
+            jmp .@1
+            .@3:
             ret
 
         """.trimIndent()
@@ -60,13 +61,13 @@ class GenAssemblyTest {
             stw %9, %sp[0]
             stw %30, %sp[4]
             ld %9, %1
-            beq %9, 0, .@3
+            bne %9, 0, .@4
+            ld %8, 1
+            jmp .@0
+            .@4:
             sub %1, %9, 1
             jsr factorial
             mul %8, %9, %8
-            jmp .@0
-            .@3:
-            ld %8, 1
             .@0:
             ldw %9, %sp[0]
             ldw %30, %sp[4]

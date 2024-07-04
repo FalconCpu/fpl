@@ -12,7 +12,7 @@ class AstCast (
 
     override fun codeGenExpression(cb: CodeBlock, context: AstBlock): Symbol {
         val exprSymbol = expr.codeGenExpression(cb, context)
-        val typeSymbol = type.resolveType(context)
-        return cb.addNewTemp(exprSymbol, typeSymbol)
+        val type = type.resolveType(context)
+        return cb.addCopy(exprSymbol, type)
     }
 }

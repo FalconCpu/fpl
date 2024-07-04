@@ -21,6 +21,8 @@ class TypeCheck {
             *****************************************************
                           TopLevel
             *****************************************************
+            START
+            END
 
             *****************************************************
                           main
@@ -66,24 +68,26 @@ class TypeCheck {
             *****************************************************
                           TopLevel
             *****************************************************
+            START
+            END
 
             *****************************************************
                           main
             *****************************************************
             START
             MOV a, 0
-            JMP @1
-            @3:
+            @1:
+            BLT_I a, 10, @2
+            JMP @3
+            @2:
             ADD_I &0, a, 1
             MOV a, &0
-            @1:
-            BLT_I a, 10, @3
-            JMP @2
-            @2:
+            JMP @1
+            @3:
             @0:
             END
 
-            
+
         """.trimIndent()
         runTest(prog, expected)
     }
@@ -124,6 +128,8 @@ class TypeCheck {
             *****************************************************
                           TopLevel
             *****************************************************
+            START
+            END
 
             *****************************************************
                           fred
@@ -140,7 +146,7 @@ class TypeCheck {
             BEQ_I a, 3, @7
             JMP @6
             @6:
-            MOV b, 5
+            JMP @8
             JMP @1
             @3:
             MOV b, 2
@@ -150,6 +156,9 @@ class TypeCheck {
             JMP @1
             @7:
             MOV b, 4
+            JMP @1
+            @8:
+            MOV b, 5
             JMP @1
             @1:
             @0:
@@ -174,6 +183,8 @@ class TypeCheck {
             *****************************************************
                           TopLevel
             *****************************************************
+            START
+            END
 
             *****************************************************
                           fred
@@ -253,6 +264,8 @@ class TypeCheck {
             *****************************************************
                           TopLevel
             *****************************************************
+            START
+            END
 
             *****************************************************
                           double
@@ -332,6 +345,8 @@ class TypeCheck {
             *****************************************************
                           TopLevel
             *****************************************************
+            START
+            END
 
             *****************************************************
                           double
@@ -391,6 +406,8 @@ class TypeCheck {
             *****************************************************
                           TopLevel
             *****************************************************
+            START
+            END
 
             *****************************************************
                           print
@@ -433,6 +450,8 @@ class TypeCheck {
             *****************************************************
                           TopLevel
             *****************************************************
+            START
+            END
 
             *****************************************************
                           sum
@@ -441,19 +460,19 @@ class TypeCheck {
             MOV array, %1
             MOV sum, 0
             MOV index, 0
-            JMP @1
-            @3:
-            MUL_I &1, index, 4
-            ADD_I &2, array, &1
-            LD4 &0, &2[0]
-            ADD_I &3, sum, &0
+            @1:
+            BLT_I index, 10, @2
+            JMP @3
+            @2:
+            MUL_I &0, index, 4
+            ADD_I &1, array, &0
+            LDW &2, &1[0]
+            ADD_I &3, sum, &2
             MOV sum, &3
             ADD_I &4, index, 1
             MOV index, &4
-            @1:
-            BLT_I index, 10, @3
-            JMP @2
-            @2:
+            JMP @1
+            @3:
             MOV %8, sum
             JMP @0
             @0:
@@ -481,6 +500,8 @@ class TypeCheck {
             *****************************************************
                           TopLevel
             *****************************************************
+            START
+            END
 
             *****************************************************
                           double
@@ -556,14 +577,18 @@ class TypeCheck {
             *****************************************************
                           TopLevel
             *****************************************************
+            START
+            END
 
             *****************************************************
                           Animal
             *****************************************************
             START
             MOV this, %1
-            ST4 %2, this[name]
-            ST4 %3, this[legs]
+            MOV &0, %2
+            STW &0, this[name]
+            MOV &1, %3
+            STW &1, this[legs]
             END
 
             *****************************************************
@@ -571,11 +596,12 @@ class TypeCheck {
             *****************************************************
             START
             MOV a, %1
-            LD4 &0, a[legs]
+            LDW &0, a[legs]
             SUB_I &1, &0, 1
-            ST4 &1, a[legs]
-            LD4 &2, a[legs]
-            MOV %8, &2
+            MOV &0, &1
+            STW &0, a[legs]
+            LDW &0, a[legs]
+            MOV %8, &0
             JMP @0
             @0:
             END
@@ -616,6 +642,8 @@ class TypeCheck {
             *****************************************************
                           TopLevel
             *****************************************************
+            START
+            END
 
             *****************************************************
                           main
@@ -645,6 +673,8 @@ class TypeCheck {
             *****************************************************
                           TopLevel
             *****************************************************
+            START
+            END
 
             *****************************************************
                           main
@@ -656,9 +686,10 @@ class TypeCheck {
             @2:
             ADD_I &0, total, i
             MOV total, &0
-            ADD_I i, i, 1
+            ADD_I &1, i, 1
+            MOV i, &1
             @1:
-            BLT_I i, 10, @2
+            BLTE_I i, 10, @2
             MOV %8, total
             JMP @0
             @0:
@@ -667,6 +698,217 @@ class TypeCheck {
 
         """.trimIndent()
         runTest(prog,expected)
+    }
+
+    @Test
+    fun nullableType() {
+        val prog = """
+            class Animal(val name:String, var legs:Int)
+
+            fun fred(a:Animal?)->Int
+                return a.legs       # this should give an error as a could be null
+                
+        """.trimIndent()
+
+        val expected = """
+            input:4.14-4.17: Cannot access member as reference could be null
+        """.trimIndent()
+
+        runTest(prog, expected)
+    }
+
+
+    @Test
+    fun smartNullableType() {
+        val prog = """
+            class Animal(val name:String, var legs:Int)
+
+            fun fred(a:Animal?)->Int
+                if (a!= null)
+                    return a.legs   # this is fine as the access is guarded by a null check
+                else
+                    return 0
+                
+        """.trimIndent()
+
+        val expected = """
+            *****************************************************
+                          TopLevel
+            *****************************************************
+            START
+            END
+
+            *****************************************************
+                          Animal
+            *****************************************************
+            START
+            MOV this, %1
+            MOV &0, %2
+            STW &0, this[name]
+            MOV &1, %3
+            STW &1, this[legs]
+            END
+
+            *****************************************************
+                          fred
+            *****************************************************
+            START
+            MOV a, %1
+            BNE_I a, 0, @3
+            JMP @2
+            @2:
+            JMP @4
+            JMP @1
+            @3:
+            LDW &0, a[legs]
+            MOV %8, &0
+            JMP @0
+            JMP @1
+            @4:
+            MOV %8, 0
+            JMP @0
+            JMP @1
+            @1:
+            @0:
+            END
+
+
+        """.trimIndent()
+
+        runTest(prog, expected)
+    }
+
+    @Test
+    fun nullableType2() {
+        val prog = """
+            class Animal(val name:String, var legs:Int)
+
+            fun fred(a:Animal?)->Int
+                if a!=null
+                    val b = 1
+                return a.legs       # this should give an error as a could be null, despite checking for null in if
+                
+        """.trimIndent()
+
+        val expected = """
+            input:6.14-6.17: Cannot access member as reference could be null
+        """.trimIndent()
+
+        runTest(prog, expected)
+    }
+
+    @Test
+    fun nullableType3() {
+        val prog = """
+            class Animal(val name:String, var legs:Int)
+
+            fun fred(a:Animal?)->Int
+                if a=null
+                    return 0
+                return a.legs       # this should be OK - as flow doesn't reach the return if a is null
+                
+        """.trimIndent()
+
+        val expected = """
+            *****************************************************
+                          TopLevel
+            *****************************************************
+            START
+            END
+
+            *****************************************************
+                          Animal
+            *****************************************************
+            START
+            MOV this, %1
+            MOV &0, %2
+            STW &0, this[name]
+            MOV &1, %3
+            STW &1, this[legs]
+            END
+
+            *****************************************************
+                          fred
+            *****************************************************
+            START
+            MOV a, %1
+            BEQ_I a, 0, @3
+            JMP @2
+            @2:
+            JMP @1
+            @3:
+            MOV %8, 0
+            JMP @0
+            JMP @1
+            @1:
+            LDW &0, a[legs]
+            MOV %8, &0
+            JMP @0
+            @0:
+            END
+
+
+        """.trimIndent()
+
+        runTest(prog, expected)
+    }
+
+
+    @Test
+    fun nullableWhile() {
+        val prog = """
+            class LinkedList(val next:LinkedList?, val item:Int)
+
+            fun total(var list:LinkedList?)->Int
+                var total = 0
+                while list!=null
+                    total = total + list.item  # this should not give an error as guarded by a null check
+                return total
+                
+        """.trimIndent()
+
+        val expected = """
+            *****************************************************
+                          TopLevel
+            *****************************************************
+            START
+            END
+
+            *****************************************************
+                          LinkedList
+            *****************************************************
+            START
+            MOV this, %1
+            MOV &0, %2
+            STW &0, this[next]
+            MOV &1, %3
+            STW &1, this[item]
+            END
+
+            *****************************************************
+                          total
+            *****************************************************
+            START
+            MOV list, %1
+            MOV total, 0
+            @1:
+            BNE_I list, 0, @2
+            JMP @3
+            @2:
+            LDW &0, list[item]
+            ADD_I &1, total, &0
+            MOV total, &1
+            JMP @1
+            @3:
+            MOV %8, total
+            JMP @0
+            @0:
+            END
+
+
+        """.trimIndent()
+
+        runTest(prog, expected)
     }
 
 

@@ -27,21 +27,19 @@ class AstFuncCall(
                     "Argument ${index+1}: Got type ${args[index].type} when expecting ${params[index]}"
                 )
             }
-            cb.add(InstrMov(cb.getReg(index+1), args[index]))
+            cb.addMov(cb.getReg(index+1), args[index])
         }
 
         if (funcSym is SymbolFunction)
-            cb.add(InstrCall(funcSym.function))
+            cb.addCall(funcSym.function)
         else
-            cb.add(InstrCallReg(funcSym))
+            cb.addCallR(funcSym)
 
-        if (funcSym.type.retType is TypeUnit) {
-            return cb.getReg(0)
-        } else {
-            val ret = cb.newTemp(funcSym.type.retType)
-            cb.add(InstrMov(ret, cb.getReg(8)))
-            return ret
-        }
+        return if (funcSym.type.retType is TypeUnit)
+            cb.getReg(0)
+        else
+            cb.addCopy(cb.getReg(8), funcSym.type.retType)
+
     }
 
     override fun codeGenStatement(cb: CodeBlock, context: AstBlock) {

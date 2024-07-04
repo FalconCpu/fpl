@@ -31,8 +31,8 @@ class InstrAlu(val op: AluOp, dest: Symbol, val a: Symbol, val b: Symbol) : Inst
 class InstrBra(val op: AluOp, label: Label,val a: Symbol, val b: Symbol) : InstrFlow(label)
 class InstrJmp(label: Label) : InstrFlow(label)
 class InstrLabel(label: Label) : InstrFlow(label)
-class InstrLoad(val size:Int, dest: Symbol, val a: Symbol, val offset: Symbol) : InstrData(dest)
-class InstrStore(val size:Int, val data: Symbol, val a: Symbol, val offset: Symbol) : Instr()
+class InstrLoad(val size:AluOp, dest: Symbol, val a: Symbol, val offset: Symbol) : InstrData(dest)
+class InstrStore(val size:AluOp, val data: Symbol, val a: Symbol, val offset: Symbol) : Instr()
 class InstrCall(val func: AstFunction) : Instr()
 class InstrCallReg(val a: Symbol) : Instr()
 class InstrLea(dest: Symbol, val a: Symbol) : InstrData(dest)
@@ -82,6 +82,12 @@ enum class AluOp {
 
     AND_B,
     OR_B,
+
+    B,   // Memory ops
+    H,
+    W,
+
+    MOV
 }
 
 

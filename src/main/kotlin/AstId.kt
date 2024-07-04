@@ -20,7 +20,7 @@ class AstId(location: Location, private val name:String) : Ast(location) {
             is SymbolLocalVar -> {
                 if (!symbol.mutable)
                     Log.error(location, "Cannot assign to immutable variable")
-                cb.add(InstrMov(symbol, value))
+                cb.addMov(symbol, value)
             }
 
             is SymbolGlobalVar -> {

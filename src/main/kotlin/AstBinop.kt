@@ -24,39 +24,7 @@ class AstBinop(
         if (l is SymbolIntLit && r is SymbolIntLit)
             return compEval(op.outOp, l, r)
 
-        val ret = cb.newTemp(op.outType)
-        cb.add( InstrAlu(op.outOp, ret, l, r))
-        return ret
-    }
-
-    override fun codeGenBranch(cb: CodeBlock, context: AstBlock, labTrue: Label, labFalse: Label) {
-        when (kind) {
-            TokenKind.EQ,
-            TokenKind.NEQ,
-            TokenKind.LT,
-            TokenKind.LTE,
-            TokenKind.GT,
-            TokenKind.GTE -> {
-                val l = lhs.codeGenExpression(cb, context)
-                val r = rhs.codeGenExpression(cb, context)
-                if (l is SymbolError || r is SymbolError)
-                    return
-                val op = binopTable.find{ it.kind == kind && it.lhs == l.type && it.rhs == r.type }
-                if (op==null) {
-                    Log.error(location, "No operation defined for ${l.type} $kind ${r.type}")
-                    return
-                }
-                cb.add( InstrBra(op.outOp, labTrue, l, r))
-                cb.add( InstrJmp(labFalse))
-            }
-
-            TokenKind.AND -> TODO()
-            TokenKind.OR -> TODO()
-
-            else -> {
-                super.codeGenBranch(cb, context, labTrue, labFalse)
-            }
-        }
+        return cb.addAluOp(op.outOp, l, r, op.outType)
     }
 }
 

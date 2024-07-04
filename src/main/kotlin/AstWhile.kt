@@ -11,14 +11,19 @@ class AstWhile (
     }
 
     override fun codeGenStatement(cb: CodeBlock, context: AstBlock) {
-        val labCond = cb.newLabel()
-        val labEnd = cb.newLabel()
         val labStart = cb.newLabel()
-        cb.add( InstrJmp(labCond))
-        cb.add( InstrLabel(labStart))
+        val labBody = cb.newLabel()
+        val labEnd = cb.newLabel()
+        cb.addLabel( labStart)
+        cb.pathStateTrue = cb.pathState
+        cb.pathStateFalse = cb.pathState
+        cond.codeGenBranch(cb, context, labBody, labEnd)
+        cb.pathState = cb.pathStateTrue
+        val pathStateAtEnd = cb.pathStateFalse
+        cb.addLabel( labBody)
         statements.forEach { it.codeGenStatement(cb, this) }
-        cb.add( InstrLabel(labCond))
-        cond.codeGenBranch(cb, context, labStart, labEnd)
-        cb.add( InstrLabel(labEnd))
+        cb.addJump(labStart)
+        cb.addLabel( labEnd)
+        cb.pathState = pathStateAtEnd
     }
 }

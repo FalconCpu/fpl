@@ -14,28 +14,28 @@ class AstFor (
         statements.forEach { it.dump(sb, indent + 1) }
     }
 
-
     override fun codeGenStatement(cb: CodeBlock, context: AstBlock) {
-        val fromVal = astFrom.codeGenExpression(cb, context)
+        val startVal = astFrom.codeGenExpression(cb, context)
         val endVal = astTo.codeGenExpression(cb, context)
-        if (!TypeInt.isTypeCompatible(fromVal))
+        if (!TypeInt.isTypeCompatible(startVal))
             Log.error(location, "FROM value must be of type int")
-        if (!fromVal.type.isTypeCompatible(endVal))
+        if (!startVal.type.isTypeCompatible(endVal))
             Log.error(location, "FROM and TO values must be of the same type")
 
-        val symbol = SymbolLocalVar(id, fromVal.type, false)
+        val symbol = SymbolLocalVar(id, startVal.type, false)
         add(location, symbol)
         cb.add(symbol)
 
         val labelCond = cb.newLabel()
         val labelStart = cb.newLabel()
         val braOp = if (excludeEnd) AluOp.LT_I else AluOp.LTE_I
-        cb.add(InstrMov(symbol, fromVal))
-        cb.add(InstrJmp(labelCond))
-        cb.add(InstrLabel(labelStart))
+        cb.addMov(symbol, startVal)
+        cb.addJump(labelCond)
+        cb.addLabel(labelStart)
         statements.forEach { it.codeGenStatement(cb, this) }
-        cb.add(InstrAlu(AluOp.ADD_I, symbol, symbol, makeSymbolIntLit(1)))
-        cb.add(InstrLabel(labelCond))
-        cb.add(InstrBra(braOp, labelStart, symbol, endVal))
+        val inc = cb.addAluOp(AluOp.ADD_I, symbol, makeSymbolIntLit(1), symbol.type)
+        cb.addMov(symbol, inc)
+        cb.addLabel(labelCond)
+        cb.addBranch(braOp, labelStart, symbol, endVal)
     }
 }

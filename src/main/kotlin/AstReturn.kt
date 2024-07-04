@@ -22,8 +22,9 @@ class AstReturn (
             val v = value.codeGenExpression(cb, context)
             if (!enclosingFunction.retType.isTypeCompatible(v))
                 Log.error(location, "Function should return '${enclosingFunction.retType}', not '${v.type}'")
-            cb.add( InstrMov(cb.getReg(8), v))
+            cb.addMov( cb.getReg(8), v)
         }
-        cb.add( InstrJmp(enclosingFunction.endLabel))
+        cb.addJump( enclosingFunction.endLabel)
+        cb.pathState = cb.pathState.addUnreachable()
     }
 }
