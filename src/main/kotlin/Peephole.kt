@@ -1,10 +1,12 @@
 import AluOp.*
+import java.util.*
 
 class Peephole(private val cb: CodeBlock) {
     private val prog = cb.prog
 
     private val debug = true
     private var madeChange = false
+    private lateinit var availableMap : Array<BitSet>
 
     /**
      * Tests to see if an Arg is of a kind that can be stored in a register
@@ -31,7 +33,22 @@ class Peephole(private val cb: CodeBlock) {
      * Build def- and use- information for all Vars
      */
 
+    private fun rebuildExpressions() {
+        for (instr  in cb.prog) {
+            if (instr is InstrData && instr.dest is SymbolTemp) {
+                when(instr) {
+                    is InstrAlu -> instr.dest.expression = Expression(instr.op, instr.a, instr.b)
+                    is InstrLea -> {}
+                    is InstrLoad ->instr.dest.expression = Expression(instr.size, instr.a, instr.offset)
+                    is InstrMov -> instr.dest.expression = Expression(MOV, instr.a, symbolZero)
+                }
+            }
+        }
+    }
+
     private fun rebuildIndex() {
+        prog.removeIf { it is InstrNop || it is InstrMov && it.dest==it.a}
+
         for(v in cb.symbols) {
             v.def.clear()
             v.use.clear()
@@ -77,10 +94,6 @@ class Peephole(private val cb: CodeBlock) {
             u.use.remove(ins)
         prog[index] = InstrNop()
         madeChange = true
-    }
-
-    private fun removeNop() {
-        prog.removeIf { it is InstrNop }
     }
 
     private fun Instr.replaceWith(newInstr: Instr) {
@@ -149,121 +162,174 @@ class Peephole(private val cb: CodeBlock) {
         return ret
     }
 
+    private fun InstrMov.peephole() {
+        // remove instructions when the result is never used
+        if (dest.use.isEmpty() && dest !is SymbolReg)
+            return changeToNop(this)
+
+        if (dest==a)
+            return changeToNop(this)
+
+        val aConst = a.varHasConstantValue()
+        if (a.isVar() && aConst!=null)
+            return replaceWith( InstrMov(dest, aConst))
+    }
+
+    private fun InstrAlu.peephole() {
+        // remove instructions when the result is never used
+        if (dest.use.isEmpty() && dest !is SymbolReg)
+            return changeToNop(this)
+
+        val aConst = a.varHasConstantValue()
+        val bConst = b.varHasConstantValue()
+
+        if (aConst!=null && bConst!=null) {
+            val ev = compEval(op, aConst,bConst)
+            return replaceWith( InstrMov(dest, ev))
+        }
+
+        if (aConst!=null && a.isVar() && isSmallInt(aConst) && op.isCommutative())
+            return replaceWith( InstrAlu(op, dest, b, aConst) )
+
+        if (bConst!=null) {
+            if (b.isVar() && isSmallInt(bConst))
+                return replaceWith(InstrAlu(op, dest, a, bConst))
+
+            if (bConst.value == 0 && (op == ADD_I || op == SUB_I || op == OR_I || op == XOR_I || op == LSL_I || op == LSR_I))
+                return replaceWith(InstrMov(dest, a))
+
+            if (bConst.value == 0 && (op == AND_I || op == MUL_I))
+                return replaceWith(InstrMov(dest, symbolZero))
+
+            if (bConst.value == 1 && (op == MUL_I))
+                return replaceWith(InstrMov(dest, a))
+
+            if (bConst.value.isPowerOf2() && op == MUL_I)
+                return replaceWith(InstrAlu(LSL_I, dest, a, makeSymbolIntLit(log2(bConst.value))))
+
+            if (bConst.value.isPowerOf2() && op == DIV_I)
+                return replaceWith(InstrAlu(ASR_I, dest, a, makeSymbolIntLit(log2(bConst.value))))
+
+            if (bConst.value.isPowerOf2() && op == MOD_I && bConst.value<=0x1000)
+                return replaceWith(InstrAlu(AND_I, dest, a, makeSymbolIntLit(bConst.value-1)))
+        }
+    }
+
+    private fun InstrJmp.peephole() {
+        // Look for jumps to next instruction
+        if (label.index==index+1)
+            changeToNop(this)
+    }
+
+    private fun InstrBra.peephole() {
+        // Look for branch to next instruction
+        if (label.index==index+1)
+            changeToNop(this)
+
+        // look for a branch to a label that is immediately followed by a jump
+        val instAtBranchDest = prog[label.index+1]
+        if ( instAtBranchDest is InstrJmp)
+            replaceWith( InstrBra( op, instAtBranchDest.label, a, b))
+
+        // Look for either of the arguments = 0
+        val aConst = a.varHasConstantValue()
+        val bConst = b.varHasConstantValue()
+        if (a.isVar() && aConst!=null && aConst.value==0)
+            return replaceWith( InstrBra( op, label, symbolZero, b))
+        if (b.isVar() && bConst!=null && bConst.value==0)
+            return replaceWith( InstrBra( op, label, a, symbolZero))
+
+        // Look for a branch over a jump.
+        val nextInstr = prog[index+1]
+        if (label.index==index+2 && nextInstr is InstrJmp) {
+            replaceWith( InstrBra( op.invert(), nextInstr.label, a, b))
+            changeToNop( index+1 )
+        }
+    }
+
+    private fun InstrLabel.peephole() {
+        // labels that are never used
+        if (label.use.isEmpty())
+            changeToNop(this)
+    }
 
     /**
      * Finds instruction specific peephole optimizations.
      */
 
     private fun Instr.peephole()  {
+        // dispatch to specific peephole functions
         when (this) {
-            is InstrMov -> {
-                // remove instructions when the result is never used
-                if (dest.use.isEmpty() && dest !is SymbolReg)
-                    return changeToNop(this)
-
-                if (dest==a)
-                    return changeToNop(this)
-
-                val aConst = a.varHasConstantValue()
-                if (a.isVar() && aConst!=null)
-                    return replaceWith( InstrMov(dest, aConst))
-            }
-
-            is InstrAlu -> {
-                // remove instructions when the result is never used
-                if (dest.use.isEmpty() && dest !is SymbolReg)
-                    return changeToNop(this)
-
-                val aConst = a.varHasConstantValue()
-                val bConst = b.varHasConstantValue()
-
-                if (aConst!=null && bConst!=null) {
-                    val ev = compEval(op, aConst,bConst)
-                    return replaceWith( InstrMov(dest, ev))
-                }
-
-                if (aConst!=null && a.isVar() && isSmallInt(aConst) && op.isCommutative())
-                    return replaceWith( InstrAlu(op, dest, b, aConst) )
-
-                if (bConst!=null) {
-                    if (b.isVar() && isSmallInt(bConst))
-                        return replaceWith(InstrAlu(op, dest, a, bConst))
-
-                    if (bConst.value == 0 && (op == ADD_I || op == SUB_I || op == OR_I || op == XOR_I || op == LSL_I || op == LSR_I))
-                        return replaceWith(InstrMov(dest, a))
-
-                    if (bConst.value == 0 && (op == AND_I || op == MUL_I))
-                        return replaceWith(InstrMov(dest, symbolZero))
-
-                    if (bConst.value == 1 && (op == MUL_I))
-                        return replaceWith(InstrMov(dest, a))
-
-                    if (bConst.value.isPowerOf2() && op == MUL_I)
-                        return replaceWith(InstrAlu(LSL_I, dest, a, makeSymbolIntLit(log2(bConst.value))))
-
-                    if (bConst.value.isPowerOf2() && op == DIV_I)
-                        return replaceWith(InstrAlu(ASR_I, dest, a, makeSymbolIntLit(log2(bConst.value))))
-
-                    if (bConst.value.isPowerOf2() && op == MOD_I && bConst.value<=0x1000)
-                        return replaceWith(InstrAlu(AND_I, dest, a, makeSymbolIntLit(bConst.value-1)))
-                }
-            }
-
-            is InstrJmp -> {
-                // Look for jumps to next instruction
-                if (label.index==index+1)
-                    changeToNop(this)
-            }
-
-            is InstrBra -> {
-                // Look for branch to next instruction
-                if (label.index==index+1)
-                    changeToNop(this)
-
-                // look for a branch to a label that is immediately followed by a jump
-                val instAtBranchDest = prog[label.index+1]
-                if ( instAtBranchDest is InstrJmp)
-                    replaceWith( InstrBra( op, instAtBranchDest.label, a, b))
-
-                // Look for either of the arguments = 0
-                val aConst = a.varHasConstantValue()
-                val bConst = b.varHasConstantValue()
-                if (a.isVar() && aConst!=null && aConst.value==0)
-                    return replaceWith( InstrBra( op, label, symbolZero, b))
-                if (b.isVar() && bConst!=null && bConst.value==0)
-                    return replaceWith( InstrBra( op, label, a, symbolZero))
-
-                // Look for a branch over a jump.
-                val nextInstr = prog[index+1]
-                if (label.index==index+2 && nextInstr is InstrJmp) {
-                    replaceWith( InstrBra( op.invert(), nextInstr.label, a, b))
-                    changeToNop( index+1 )
-                }
-            }
-
-            is InstrLabel -> {
-                // labels that are never used
-                if (label.use.isEmpty())
-                    changeToNop(this)
-            }
-
-            is InstrLoad -> {
-                // Look for 'Add $t,$a,intval'  followed by 'ldx $dest,$t[offset]'
-                val prevInstr = prog[index-1]
-                if(prevInstr is InstrAlu && prevInstr.op==ADD_I && prevInstr.b is SymbolIntLit &&
-                    prevInstr.dest==a && offset is SymbolIntLit)
-                    replaceWith( InstrLoad(size, dest, prevInstr.a, makeSymbolIntLit(offset.value+prevInstr.b.value)))
-            }
-
-            is InstrStore -> {
-                // Look for 'Add $t,$a,intval'  followed by 'ldx $dest,$t[offset]'
-                val prevInstr = prog[index-1]
-                if(prevInstr is InstrAlu && prevInstr.op==ADD_I && prevInstr.b is SymbolIntLit &&
-                    prevInstr.dest==a && offset is SymbolIntLit)
-                    replaceWith( InstrStore(size, data, prevInstr.a, makeSymbolIntLit(offset.value+prevInstr.b.value)))
-            }
-
+            is InstrMov -> peephole()
+            is InstrAlu -> peephole()
+            is InstrJmp -> peephole()
+            is InstrBra -> peephole()
+            is InstrLabel -> peephole()
             else -> {}
+        }
+    }
+
+    private fun InstrAlu.checkCse() {
+        // sanity check - make sure any temps used in the instruction are available
+        if (a is SymbolTemp)
+            check(availableMap[index][a.index])
+        if (b is SymbolTemp)
+            check(availableMap[index][b.index])
+
+        if (dest is SymbolTemp && availableMap[index][dest.index]) {
+            if (debug)
+                println("CSE: $this")
+            changeToNop(index)
+        }
+    }
+
+    private fun InstrMov.checkCse() {
+        // sanity check - make sure any temps used in the instruction are available
+        if (a is SymbolTemp)
+            check(availableMap[index][a.index])
+
+        if (dest is SymbolTemp && availableMap[index][dest.index]) {
+            if (debug)
+                println("CSE: $this")
+            changeToNop(index)
+        }
+    }
+
+    private fun InstrStore.checkCse() {
+        // sanity check - make sure any temps used in the instruction are available
+        if (a is SymbolTemp)
+            check(availableMap[index][a.index])
+
+        // Look to see if the source comes from an add to literal
+        if (a is SymbolTemp && offset is SymbolIntLit) {
+            val aExpr = a.expression
+            if (aExpr.op==ADD_I && aExpr.rhs is SymbolIntLit)
+                replaceWith(InstrStore(size, data, a.expression.lhs, makeSymbolIntLit(offset.value + aExpr.rhs.value)))
+        }
+    }
+
+    private fun InstrLoad.checkCse() {
+        // sanity check - make sure any temps used in the instruction are available
+        if (a is SymbolTemp)
+            check(availableMap[index][a.index])
+
+        // Look to see if the source comes from an add to literal
+        if (a is SymbolTemp && offset is SymbolIntLit) {
+            val aExpr = a.expression
+            if (aExpr.op==ADD_I && aExpr.rhs is SymbolIntLit)
+                replaceWith(InstrLoad(size, dest, a.expression.lhs, makeSymbolIntLit(offset.value + aExpr.rhs.value)))
+        }
+    }
+
+    private fun commonSubexpressionPass() {
+        for(instr in prog) {
+            when(instr) {
+                is InstrMov -> instr.checkCse()
+                is InstrAlu -> instr.checkCse()
+                is InstrStore -> instr.checkCse()
+                is InstrLoad -> instr.checkCse()
+                else -> {}
+            }
         }
     }
 
@@ -289,16 +355,22 @@ class Peephole(private val cb: CodeBlock) {
 
 
     fun run() {
+        var passNumber = 0
         do {
             madeChange = false
             rebuildIndex()
-
             if (debug)
                 println(cb.dumpWithLineNumbers())
-
             peepholePass()
-            removeNop()
 
-        } while(madeChange)
+            if (passNumber>=1) {
+                rebuildExpressions()
+                rebuildIndex()
+                availableMap = AvailableMap(cb).generate()
+                commonSubexpressionPass()
+            }
+
+            passNumber++
+        } while(passNumber==1 || madeChange && passNumber < 10)
     }
 }

@@ -4,40 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a8bd9f8f-5dbe-4fed-83b8-7e923d2dc766" name="Changes" comment="Implemented smartcasts">
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstAnd.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstConstructor.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstNullMember.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstOr.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstRepeat.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstUnaryMinus.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/TODO" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/kotlin/PathChecks.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/cody_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cody_history.xml" afterDir="false" />
+    <list default="true" id="a8bd9f8f-5dbe-4fed-83b8-7e923d2dc766" name="Changes" comment="Implemented Local Objects">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstAssign.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstAssign.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstClass.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstClass.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstDecl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstDecl.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstFuncCall.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstFuncCall.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstFunction.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstFunction.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstId.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstId.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstIf.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstIf.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstQmark.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstQmark.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/CodeBlock.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/CodeBlock.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/GenAssembly.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/GenAssembly.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Instr.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Instr.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Parser.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Parser.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/PathState.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/PathState.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AvailibleMap.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AvailibleMap.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Peephole.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Peephole.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/RegisterAllocator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/RegisterAllocator.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Token.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Token.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Type.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Type.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/GenAssemblyTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/GenAssemblyTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/ParserTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/ParserTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/PeepholeTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/PeepholeTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/RegisterAllocatorTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/RegisterAllocatorTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/kotlin/TypeCheck.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/TypeCheck.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Symbol.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Symbol.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -297,14 +268,34 @@
       <option name="project" value="LOCAL" />
       <updated>1720089313925</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Implemented Local Objects">
+      <option name="closed" value="true" />
+      <created>1720181605175</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1720181605175</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Progressing" />
     <MESSAGE value="Can now compile to assembler" />
     <MESSAGE value="Implemented smartcasts" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented smartcasts" />
+    <MESSAGE value="Implemented Local Objects" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented Local Objects" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -35,7 +35,7 @@ class SymbolFunction(name:String, type: Type, val function: AstFunction)
 class SymbolTypeName(name:String, type: Type)
     : Symbol(name, type)
 
-class SymbolTemp(name: String, type: Type, private val expression: Expression)
+class SymbolTemp(name: String, type: Type, var expression: Expression)
     : Symbol(name, type) {
 
     override fun dependsOn(other: Symbol): Boolean {
