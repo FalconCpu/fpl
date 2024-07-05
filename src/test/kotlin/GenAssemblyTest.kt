@@ -116,6 +116,21 @@ class GenAssemblyTest {
         """.trimIndent()
 
         val expected = """
+            TopLevel:
+            ret
+            foo:
+            sub %sp, %sp, 4
+            stw %28, %sp[0]
+            ld %28, %sp
+            sub %sp, %sp, 40
+            ld %8, 4
+            stw %8, %sp[12]
+            ldw %8, %sp[12]
+            ld %sp, %28
+            ldw %28, %sp[0]
+            add %sp, %sp, 4
+            ret
+
         """.trimIndent()
         runTest(prog,expected)
     }

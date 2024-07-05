@@ -6,9 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="a8bd9f8f-5dbe-4fed-83b8-7e923d2dc766" name="Changes" comment="Implemented Local Objects">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AvailibleMap.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AvailibleMap.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Peephole.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Peephole.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Symbol.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Symbol.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/GenAssemblyTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/GenAssemblyTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/PeepholeTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/PeepholeTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,45 +59,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Downloaded.Files.Path.Enabled": "false",
-    "Gradle.Build fpl.executor": "Run",
-    "Gradle.PathCheck.uninitializedVar.executor": "Run",
-    "Gradle.PeepholeTest.localArray.executor": "Run",
-    "Gradle.RegisterAllocatorTest.sumArray.executor": "Run",
-    "Gradle.StdLibTest.kPrintStringTest.executor": "Run",
-    "Gradle.Tests in 'fpl.test'.executor": "Run",
-    "Gradle.TypeCheck.constructorTest.executor": "Run",
-    "Gradle.TypeCheck.nullableType3.executor": "Run",
-    "Gradle.TypeCheck.nullishMember.executor": "Run",
-    "Gradle.TypeCheck.simpleDeclarations.executor": "Run",
-    "Gradle.Upgrade Gradle wrapper.executor": "Run",
-    "Kotlin.MainKt.executor": "Run",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.CodyAccountHistoryMigration": "true",
-    "RunOnceActivity.CodyConvertUrlToCodebaseName": "true",
-    "RunOnceActivity.CodyHistoryLlmMigration": "true",
-    "RunOnceActivity.CodyProjectSettingsMigration": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/simon/Downloads/Sourcegraph-6.0.3.zip",
-    "onboarding.tips.debug.path": "C:/Users/simon/IdeaProjects/fpl/src/main/kotlin/Main.kt",
-    "settings.editor.selected.configurable": "project.kotlinCompiler"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Gradle.Build fpl.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PathCheck.uninitializedVar.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PeepholeTest.localArray.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.RegisterAllocatorTest.sumArray.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.StdLibTest.kPrintStringTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Tests in 'fpl.test'.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.TypeCheck.constructorTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.TypeCheck.nullableType3.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.TypeCheck.nullishMember.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.TypeCheck.simpleDeclarations.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Upgrade Gradle wrapper.executor&quot;: &quot;Run&quot;,
+    &quot;Kotlin.MainKt.executor&quot;: &quot;Run&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.CodyAccountHistoryMigration&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.CodyConvertUrlToCodebaseName&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.CodyHistoryLlmMigration&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.CodyProjectSettingsMigration&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/simon/Downloads/Sourcegraph-6.0.3.zip&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/simon/IdeaProjects/fpl/src/main/kotlin/Main.kt&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.kotlinCompiler&quot;
   },
-  "keyToStringList": {
-    "kotlin-gradle-user-dirs": [
-      "C:\\Users\\simon\\.gradle"
+  &quot;keyToStringList&quot;: {
+    &quot;kotlin-gradle-user-dirs&quot;: [
+      &quot;C:\\Users\\simon\\.gradle&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
@@ -106,7 +106,7 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.PeepholeTest.localArray">
+  <component name="RunManager" selected="Gradle.Tests in 'fpl.test'">
     <configuration name="PathCheck.uninitializedVar" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -227,8 +227,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.PeepholeTest.localArray" />
         <item itemvalue="Gradle.Tests in 'fpl.test'" />
+        <item itemvalue="Gradle.PeepholeTest.localArray" />
         <item itemvalue="Gradle.TypeCheck.constructorTest" />
         <item itemvalue="Gradle.TypeCheck.nullishMember" />
         <item itemvalue="Gradle.PathCheck.uninitializedVar" />
