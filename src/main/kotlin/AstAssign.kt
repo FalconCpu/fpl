@@ -12,6 +12,6 @@ class AstAssign(
 
     override fun codeGenStatement(cb: CodeBlock, context: AstBlock) {
         val r = rhs.codeGenExpression(cb, context)
-        val l = lhs.codeGenLValue(cb, context, r)
+        lhs.codeGenLValue(cb, context, r)
     }
 }

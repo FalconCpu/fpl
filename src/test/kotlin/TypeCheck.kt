@@ -147,7 +147,6 @@ class TypeCheck {
             JMP @6
             @6:
             JMP @8
-            JMP @1
             @3:
             MOV b, 2
             JMP @1
@@ -437,11 +436,11 @@ class TypeCheck {
     @Test
     fun sumArray() {
         val prog = """
-            fun sum(array:Int[])->Int
+            fun sum(a:Array<Int>)->Int
                 var sum = 0
                 var index = 0
                 while index < 10
-                    sum = sum + array[index]
+                    sum = sum + a[index]
                     index = index + 1                
                 return sum
         """.trimIndent()
@@ -457,7 +456,7 @@ class TypeCheck {
                           sum
             *****************************************************
             START
-            MOV array, %1
+            MOV a, %1
             MOV sum, 0
             MOV index, 0
             @1:
@@ -465,7 +464,7 @@ class TypeCheck {
             JMP @3
             @2:
             MUL_I &0, index, 4
-            ADD_I &1, array, &0
+            ADD_I &1, a, &0
             LDW &2, &1[0]
             ADD_I &3, sum, &2
             MOV sum, &3
@@ -701,170 +700,15 @@ class TypeCheck {
     }
 
     @Test
-    fun nullableType() {
+    fun repeatLoop() {
         val prog = """
-            class Animal(val name:String, var legs:Int)
-
-            fun fred(a:Animal?)->Int
-                return a.legs       # this should give an error as a could be null
-                
-        """.trimIndent()
-
-        val expected = """
-            input:4.14-4.17: Cannot access member as reference could be null
-        """.trimIndent()
-
-        runTest(prog, expected)
-    }
-
-
-    @Test
-    fun smartNullableType() {
-        val prog = """
-            class Animal(val name:String, var legs:Int)
-
-            fun fred(a:Animal?)->Int
-                if (a!= null)
-                    return a.legs   # this is fine as the access is guarded by a null check
-                else
-                    return 0
-                
-        """.trimIndent()
-
-        val expected = """
-            *****************************************************
-                          TopLevel
-            *****************************************************
-            START
-            END
-
-            *****************************************************
-                          Animal
-            *****************************************************
-            START
-            MOV this, %1
-            MOV &0, %2
-            STW &0, this[name]
-            MOV &1, %3
-            STW &1, this[legs]
-            END
-
-            *****************************************************
-                          fred
-            *****************************************************
-            START
-            MOV a, %1
-            BNE_I a, 0, @3
-            JMP @2
-            @2:
-            JMP @4
-            JMP @1
-            @3:
-            LDW &0, a[legs]
-            MOV %8, &0
-            JMP @0
-            JMP @1
-            @4:
-            MOV %8, 0
-            JMP @0
-            JMP @1
-            @1:
-            @0:
-            END
-
-
-        """.trimIndent()
-
-        runTest(prog, expected)
-    }
-
-    @Test
-    fun nullableType2() {
-        val prog = """
-            class Animal(val name:String, var legs:Int)
-
-            fun fred(a:Animal?)->Int
-                if a!=null
-                    val b = 1
-                return a.legs       # this should give an error as a could be null, despite checking for null in if
-                
-        """.trimIndent()
-
-        val expected = """
-            input:6.14-6.17: Cannot access member as reference could be null
-        """.trimIndent()
-
-        runTest(prog, expected)
-    }
-
-    @Test
-    fun nullableType3() {
-        val prog = """
-            class Animal(val name:String, var legs:Int)
-
-            fun fred(a:Animal?)->Int
-                if a=null
-                    return 0
-                return a.legs       # this should be OK - as flow doesn't reach the return if a is null
-                
-        """.trimIndent()
-
-        val expected = """
-            *****************************************************
-                          TopLevel
-            *****************************************************
-            START
-            END
-
-            *****************************************************
-                          Animal
-            *****************************************************
-            START
-            MOV this, %1
-            MOV &0, %2
-            STW &0, this[name]
-            MOV &1, %3
-            STW &1, this[legs]
-            END
-
-            *****************************************************
-                          fred
-            *****************************************************
-            START
-            MOV a, %1
-            BEQ_I a, 0, @3
-            JMP @2
-            @2:
-            JMP @1
-            @3:
-            MOV %8, 0
-            JMP @0
-            JMP @1
-            @1:
-            LDW &0, a[legs]
-            MOV %8, &0
-            JMP @0
-            @0:
-            END
-
-
-        """.trimIndent()
-
-        runTest(prog, expected)
-    }
-
-
-    @Test
-    fun nullableWhile() {
-        val prog = """
-            class LinkedList(val next:LinkedList?, val item:Int)
-
-            fun total(var list:LinkedList?)->Int
+            fun main()->Int
                 var total = 0
-                while list!=null
-                    total = total + list.item  # this should not give an error as guarded by a null check
+                repeat
+                    total = total + 1
+                until total > 10
                 return total
-                
+
         """.trimIndent()
 
         val expected = """
@@ -873,44 +717,234 @@ class TypeCheck {
             *****************************************************
             START
             END
-
+            
             *****************************************************
-                          LinkedList
-            *****************************************************
-            START
-            MOV this, %1
-            MOV &0, %2
-            STW &0, this[next]
-            MOV &1, %3
-            STW &1, this[item]
-            END
-
-            *****************************************************
-                          total
+                          main
             *****************************************************
             START
-            MOV list, %1
             MOV total, 0
             @1:
-            BNE_I list, 0, @2
-            JMP @3
-            @2:
-            LDW &0, list[item]
-            ADD_I &1, total, &0
-            MOV total, &1
+            ADD_I &0, total, 1
+            MOV total, &0
+            BGT_I total, 10, @2
             JMP @1
-            @3:
+            @2:
             MOV %8, total
             JMP @0
             @0:
             END
+            
 
+        """.trimIndent()
+        runTest(prog,expected)
+    }
+
+    @Test
+    fun constructorTest() {
+        val prog = """
+            class Cat(val name:String, val legs:Int)
+            
+            fun main()->Cat
+                val c = new Cat("Fred", 4)
+                return c
+
+            # dummy function to make the compiler happy
+            fun mallocObject(cls:Int)->Int
+                return 0
 
         """.trimIndent()
 
-        runTest(prog, expected)
+        val expected = """
+            *****************************************************
+                          TopLevel
+            *****************************************************
+            START
+            END
+
+            *****************************************************
+                          Cat
+            *****************************************************
+            START
+            MOV this, %1
+            MOV &0, %2
+            STW &0, this[name]
+            MOV &1, %3
+            STW &1, this[legs]
+            END
+
+            *****************************************************
+                          main
+            *****************************************************
+            START
+            MOV %1, 8
+            CALL mallocObject
+            MOV &0, %8
+            LEA &1, Fred
+            MOV %1, &0
+            MOV %2, &1
+            MOV %3, 4
+            CALL Cat
+            MOV c, &0
+            MOV %8, c
+            JMP @0
+            @0:
+            END
+
+            *****************************************************
+                          mallocObject
+            *****************************************************
+            START
+            MOV cls, %1
+            MOV %8, 0
+            JMP @0
+            @0:
+            END
+
+
+        """.trimIndent()
+        runTest(prog,expected)
     }
 
+
+    @Test
+    fun constructorBadArgsTest() {
+        val prog = """
+            class Cat(name:String, legs:Int)
+            
+            fun main()->Cat
+                val c = new Cat("Fred", "3")
+                return c
+
+            # dummy function to make the compiler happy
+            fun mallocObject(cls:Int)->Int
+                return 0
+
+        """.trimIndent()
+
+        val expected = """
+            input:4.29-4.31: Parameter legs is of type Int but got String
+        """.trimIndent()
+        runTest(prog,expected)
+    }
+
+    @Test
+    fun nullishMember() {
+        val prog = """
+            class Cat(val name:String, val legs:Int)
+            
+            fun main(a:Cat?)->Int
+                return a?.legs
+
+        """.trimIndent()
+
+        val expected = """
+            *****************************************************
+                          TopLevel
+            *****************************************************
+            START
+            END
+
+            *****************************************************
+                          Cat
+            *****************************************************
+            START
+            MOV this, %1
+            MOV &0, %2
+            STW &0, this[name]
+            MOV &1, %3
+            STW &1, this[legs]
+            END
+
+            *****************************************************
+                          main
+            *****************************************************
+            START
+            MOV a, %1
+            MOV &0, 0
+            BEQ_I a, 0, @1
+            LDW &1, a[legs]
+            MOV &0, &1
+            @1:
+            MOV %8, &0
+            JMP @0
+            @0:
+            END
+
+
+        """.trimIndent()
+        runTest(prog,expected)
+    }
+
+
+    @Test
+    fun unaryMinus() {
+        val prog = """
+            fun main(x:Int)->Int                
+                return -x
+        """.trimIndent()
+
+        val expected = """
+            *****************************************************
+                          TopLevel
+            *****************************************************
+            START
+            END
+
+            *****************************************************
+                          main
+            *****************************************************
+            START
+            MOV x, %1
+            SUB_I &0, 0, x
+            MOV %8, &0
+            JMP @0
+            @0:
+            END
+
+
+        """.trimIndent()
+        runTest(prog,expected)
+    }
+
+    @Test
+    fun localArray() {
+        val prog = """
+            fun foo()->Int
+                val a = local Array<Int>(10)
+                a[3] = 4
+                return a[3]
+        """.trimIndent()
+
+        val expected = """
+            *****************************************************
+                          TopLevel
+            *****************************************************
+            START
+            END
+
+            *****************************************************
+                          foo
+            *****************************************************
+            START
+            SUB_I &0, %sp, 40
+            MOV %sp, &0
+            MOV a, &0
+            MUL_I &1, 3, 4
+            ADD_I &2, a, &1
+            MOV &3, 4
+            STW &3, &2[0]
+            MUL_I &1, 3, 4
+            ADD_I &2, a, &1
+            LDW &3, &2[0]
+            MOV %8, &3
+            JMP @0
+            @0:
+            END
+
+
+        """.trimIndent()
+        runTest(prog,expected)
+    }
 
 
 }

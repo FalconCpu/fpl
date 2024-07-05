@@ -82,14 +82,21 @@ class RegisterAllocator(private val cb: CodeBlock, private val livemap: Livemap)
     }
 
     private fun lookForCoalesce() {
-        for(mov in movStatements) {
-            val a = mov.a.index
-            val d = mov.dest.index
-            if (alloc[a]==UNALLOCATED && alloc[d]!=UNALLOCATED && (a !in interfere[alloc[d]]))
-                assign(a,alloc[d])
-            if (alloc[d]==UNALLOCATED && alloc[a]!=UNALLOCATED && (d !in interfere[alloc[a]]))
-                assign(d,alloc[a])
-        }
+        do {
+            var again = false
+            for (mov in movStatements) {
+                val a = mov.a.index
+                val d = mov.dest.index
+                if (alloc[a] == UNALLOCATED && alloc[d] != UNALLOCATED && (a !in interfere[alloc[d]])) {
+                    assign(a, alloc[d])
+                    again = true
+                }
+                if (alloc[d] == UNALLOCATED && alloc[a] != UNALLOCATED && (d !in interfere[alloc[a]])) {
+                    assign(d, alloc[a])
+                    again = true
+                }
+            }
+        } while (again)
     }
 
     /**

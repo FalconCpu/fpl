@@ -6,8 +6,8 @@ class AstClass (
     private val astSuperClass : Ast?
 ) : AstBlock(location, parent) {
     lateinit var type : TypeClass
-    lateinit var params: List<Symbol>            // Parameters for the constructor
-    private val codeBlock = newCodeBlock(name)   // Code block for the constructor
+    val constructorParams = mutableListOf<Symbol>()   // Parameters for the constructor
+    val codeBlock = newCodeBlock(name)   // Code block for the constructor
     lateinit var thisSym : SymbolLocalVar
 
     override fun dump(sb: StringBuilder, indent: Int) {
@@ -35,10 +35,9 @@ class AstClass (
         add(location,thisSym)
         codeBlock.addMov(thisSym, codeBlock.getReg(1))
 
-        val params = mutableListOf<Symbol>()
         for ((index, param) in astParams.withIndex()) {
             val symbol = param.createMemberSymbol(context)
-            params += symbol
+            constructorParams += symbol
             add(param.location, symbol)
             if (symbol is SymbolLocalVar) {
                 codeBlock.add(symbol)

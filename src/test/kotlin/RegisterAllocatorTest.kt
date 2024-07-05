@@ -12,7 +12,7 @@ class RegisterAllocatorTest {
     @Test
     fun sumArray() {
         val prog = """
-            fun sum(array:Int[])->Int
+            fun sum(array:Array<Int>)->Int
                 var sum = 0
                 var index = 0
                 while index < 10

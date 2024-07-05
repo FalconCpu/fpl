@@ -272,8 +272,8 @@ class ParserTest {
             TOP
               FUNC fred
                 WHILE
-                  or
-                    and
+                  OR
+                    AND
                       <
                         ID a
                         INTLIT 2
@@ -359,7 +359,7 @@ class ParserTest {
     @Test
     fun arrayType() {
         val prog = """
-            fun fred(a:Int[])
+            fun fred(a:Array<Int>)
                 val x = a[3]
         """.trimIndent()
 
@@ -462,6 +462,75 @@ class ParserTest {
         """.trimIndent()
         runTest(prog,expected)
     }
+
+
+    @Test
+    fun repeatLoop() {
+        val prog = """
+            fun main()->Int
+                var total = 0
+                repeat
+                    total = total + 1
+                until total > 10
+                return total
+
+        """.trimIndent()
+
+        val expected = """
+            TOP
+              FUNC main
+                ID Int
+                var total
+                  INTLIT 0
+                REPEAT
+                  >
+                    ID total
+                    INTLIT 10
+                  ASSIGN
+                    ID total
+                    +
+                      ID total
+                      INTLIT 1
+                RETURN
+                  ID total
+
+        """.trimIndent()
+        runTest(prog,expected)
+    }
+
+    @Test
+    fun localArray() {
+        val prog = """
+            fun foo()->Int
+                val a = local Array<Int>(10)
+                a[3] = 4
+                return a[3]
+        """.trimIndent()
+
+        val expected = """
+            TOP
+              FUNC foo
+                ID Int
+                val a
+                  CONSTRUCTOR true
+                    []
+                      ID Int
+                    INTLIT 10
+                ASSIGN
+                  index
+                    ID a
+                    INTLIT 3
+                  INTLIT 4
+                RETURN
+                  index
+                    ID a
+                    INTLIT 3
+
+        """.trimIndent()
+        runTest(prog,expected)
+    }
+
+
 
 
 }

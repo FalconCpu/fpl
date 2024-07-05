@@ -13,6 +13,7 @@ class AstIf(
         val clauseStates = mutableListOf<PathState>()
         val endLabel = cb.newLabel()
 
+        // Generate code for each clause condition, and remember the label and state for each one
         for(clause in clauses) {
             if (clause.condition != null) {
                 val nextClauseLabel = cb.newLabel()
@@ -31,11 +32,15 @@ class AstIf(
                 cb.addJump(thisLabel)
             }
         }
-        cb.addJump(endLabel)
 
         val outStates = mutableListOf<PathState>()
-        if (clauses.none { it.condition == null })  // If there is no else clause, then allow for fall-through
+        if (clauses.none { it.condition == null }) {
+            // If there is no else clause, then allow for fall-through
             outStates += cb.pathState
+            cb.addJump(endLabel)
+        }
+
+        // Now generate the code the body of each clause
         for((index,clause) in clauses.withIndex()) {
             cb.addLabel( clauseLabels[index])
             cb.pathState = clauseStates[index]

@@ -5,7 +5,7 @@ class AstFunction (
     private val astParams : List<AstParam>,
     private val astRetType : Ast?,
 ) : AstBlock(location, parent){
-    private val codeBlock = newCodeBlock(name)
+    val codeBlock = newCodeBlock(name)
     lateinit var params: List<Symbol>
     lateinit var retType: Type
     val endLabel = codeBlock.newLabel()

@@ -12,7 +12,7 @@ class GenAssemblyTest {
     @Test
     fun sumArray() {
         val prog = """
-            fun sum(array:Int[])->Int
+            fun sum(array:Array<Int>)->Int
                 var sum = 0
                 var index = 0
                 while index < 10
@@ -74,6 +74,48 @@ class GenAssemblyTest {
             add %sp, %sp, 8
             ret
 
+        """.trimIndent()
+        runTest(prog,expected)
+    }
+
+    @Test
+    fun nullishMember() {
+        val prog = """
+            class Cat(val name:String, val legs:Int)
+            
+            fun main(a:Cat?)->Int
+                return a?.legs
+
+        """.trimIndent()
+
+        val expected = """
+            TopLevel:
+            ret
+            Cat:
+            stw %2, %1[0]
+            stw %3, %1[4]
+            ret
+            main:
+            ld %8, 0
+            beq %1, 0, .@1
+            ldw %8, %1[4]
+            .@1:
+            ret
+
+        """.trimIndent()
+        runTest(prog,expected)
+    }
+
+    @Test
+    fun localArray() {
+        val prog = """
+            fun foo()->Int
+                val a = local Array<Int>(10)
+                a[3] = 4
+                return a[3]
+        """.trimIndent()
+
+        val expected = """
         """.trimIndent()
         runTest(prog,expected)
     }

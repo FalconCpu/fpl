@@ -11,6 +11,8 @@ class AstQmark(
     override fun resolveType(context:AstBlock): Type {
         val ret = lhs.resolveType(context)
         if (ret is TypeError) return ret
-        return makeTypeNullable(location,ret)
+        if (ret !is TypeClass && ret !is TypeString && ret !is TypeArray)
+            return makeTypeError(location, "QMARK can only be applied to a class, string or array")
+        return makeTypeNullable(ret)
     }
 }

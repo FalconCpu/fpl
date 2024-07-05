@@ -3,7 +3,7 @@ import AluOp.*
 class Peephole(private val cb: CodeBlock) {
     private val prog = cb.prog
 
-    private val debug = false
+    private val debug = true
     private var madeChange = false
 
     /**

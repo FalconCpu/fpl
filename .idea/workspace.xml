@@ -4,37 +4,37 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a8bd9f8f-5dbe-4fed-83b8-7e923d2dc766" name="Changes" comment="Can now compile to assembler">
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstComp.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Expression.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/Legalize.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/PathState.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="a8bd9f8f-5dbe-4fed-83b8-7e923d2dc766" name="Changes" comment="Implemented smartcasts">
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstAnd.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstConstructor.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstNullMember.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstOr.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstRepeat.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/AstUnaryMinus.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/TODO" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/kotlin/PathChecks.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/cody_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cody_history.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Ast.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Ast.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstBinop.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstBinop.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstCast.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstCast.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstAssign.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstAssign.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstClass.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstClass.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstDecl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstDecl.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstFor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstFor.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstFuncCall.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstFuncCall.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstFunction.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstFunction.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstId.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstId.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstIf.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstIf.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstIndex.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstIndex.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstMember.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstMember.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstReturn.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstReturn.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstStringLit.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstStringLit.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstTop.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstTop.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstWhile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstWhile.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/AstQmark.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/AstQmark.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/CodeBlock.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/CodeBlock.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/GenAssembly.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/GenAssembly.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Instr.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Instr.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Parser.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Parser.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Symbol.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Symbol.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/PathState.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/PathState.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Peephole.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Peephole.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/RegisterAllocator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/RegisterAllocator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Token.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Token.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/Type.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Type.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/GenAssemblyTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/GenAssemblyTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/ParserTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/ParserTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/PeepholeTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/PeepholeTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/RegisterAllocatorTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/RegisterAllocatorTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/kotlin/TypeCheck.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/kotlin/TypeCheck.kt" afterDir="false" />
@@ -55,6 +55,9 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
             <expand />
@@ -89,10 +92,14 @@
   "keyToString": {
     "Downloaded.Files.Path.Enabled": "false",
     "Gradle.Build fpl.executor": "Run",
+    "Gradle.PathCheck.uninitializedVar.executor": "Run",
+    "Gradle.PeepholeTest.localArray.executor": "Run",
     "Gradle.RegisterAllocatorTest.sumArray.executor": "Run",
     "Gradle.StdLibTest.kPrintStringTest.executor": "Run",
     "Gradle.Tests in 'fpl.test'.executor": "Run",
+    "Gradle.TypeCheck.constructorTest.executor": "Run",
     "Gradle.TypeCheck.nullableType3.executor": "Run",
+    "Gradle.TypeCheck.nullishMember.executor": "Run",
     "Gradle.TypeCheck.simpleDeclarations.executor": "Run",
     "Gradle.Upgrade Gradle wrapper.executor": "Run",
     "Kotlin.MainKt.executor": "Run",
@@ -128,8 +135,8 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.Tests in 'fpl.test'">
-    <configuration name="RegisterAllocatorTest.sumArray" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+  <component name="RunManager" selected="Gradle.PeepholeTest.localArray">
+    <configuration name="PathCheck.uninitializedVar" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -142,7 +149,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;RegisterAllocatorTest.sumArray&quot;" />
+            <option value="&quot;PathCheck.uninitializedVar&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -153,7 +160,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="StdLibTest.kPrintStringTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="PeepholeTest.localArray" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -166,7 +173,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;StdLibTest.kPrintStringTest&quot;" />
+            <option value="&quot;PeepholeTest.localArray&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -199,7 +206,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="TypeCheck.nullableType3" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="TypeCheck.constructorTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -212,7 +219,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;TypeCheck.nullableType3&quot;" />
+            <option value="&quot;TypeCheck.constructorTest&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -223,7 +230,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="TypeCheck.simpleDeclarations" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="TypeCheck.nullishMember" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -236,7 +243,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;TypeCheck.simpleDeclarations&quot;" />
+            <option value="&quot;TypeCheck.nullishMember&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -249,11 +256,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.PeepholeTest.localArray" />
         <item itemvalue="Gradle.Tests in 'fpl.test'" />
-        <item itemvalue="Gradle.TypeCheck.nullableType3" />
-        <item itemvalue="Gradle.StdLibTest.kPrintStringTest" />
-        <item itemvalue="Gradle.RegisterAllocatorTest.sumArray" />
-        <item itemvalue="Gradle.TypeCheck.simpleDeclarations" />
+        <item itemvalue="Gradle.TypeCheck.constructorTest" />
+        <item itemvalue="Gradle.TypeCheck.nullishMember" />
+        <item itemvalue="Gradle.PathCheck.uninitializedVar" />
       </list>
     </recent_temporary>
   </component>
@@ -282,13 +289,22 @@
       <option name="project" value="LOCAL" />
       <updated>1720070788269</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Implemented smartcasts">
+      <option name="closed" value="true" />
+      <created>1720089313925</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1720089313925</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Progressing" />
     <MESSAGE value="Can now compile to assembler" />
-    <option name="LAST_COMMIT_MESSAGE" value="Can now compile to assembler" />
+    <MESSAGE value="Implemented smartcasts" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented smartcasts" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -302,6 +318,6 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/fpl$Tests_in__fpl_test_.ic" NAME="Tests in 'fpl.test' Coverage Results" MODIFIED="1720006319378" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/fpl$Tests_in__fpl_test_.ic" NAME="Tests in 'fpl.test' Coverage Results" MODIFIED="1720101806483" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>

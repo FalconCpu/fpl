@@ -25,6 +25,7 @@ class TypeFunction(val params:List<Type>, val retType:Type)
 class TypeClass(name:String, val astClass: AstClass)
     : Type(name) {
         val members = mutableListOf<Symbol>()
+        var size = 0
     }
 
 val allTypeArray = mutableListOf<TypeArray>()
@@ -37,11 +38,9 @@ fun makeTypeArray(base:Type): TypeArray {
 }
 
 val allTypeNullable = mutableListOf<TypeNullable>()
-fun makeTypeNullable(location: Location, base:Type): Type {
-    if (base is TypeNullable || base is TypeError)
+fun makeTypeNullable(base:Type): Type {
+    if (base !is TypeClass && base !is TypeArray && base !is TypeString)
         return base
-    if (base !is TypeClass)
-        return makeTypeError(location,"Only struct types can be nullable")
 
     return allTypeNullable.find{it.base==base} ?: run {
         val new = TypeNullable(base)
@@ -75,6 +74,7 @@ fun calculateMemberOffsets() {
                 offset += member.type.getSize()
             }
         }
+        cls.size = offset
     }
 }
 

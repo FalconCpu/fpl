@@ -114,21 +114,62 @@ private fun Instr.genAssembly() = when(this) {
     }
 }
 
+private fun CodeBlock.setupStackFrame(sb:StringBuilder) {
+    val makesCalls = prog.any{it is InstrCall || it is InstrCallReg }
+    val stackSize = (if (maxRegister>8) 4*(maxRegister-8) else 0) + (if (makesCalls) 4 else 0) + (if (hasLocalStackVars) 4 else 0)
+    if (stackSize==0)
+        return
+
+    sb.append("sub %sp, %sp, $stackSize\n")
+    var offset = 0
+    for(r in 9..maxRegister) {
+        sb.append("stw %$r, %sp[$offset]\n")
+        offset += 4
+    }
+    if (hasLocalStackVars) {
+        sb.append("stw %28, %sp[$offset]\n")
+        offset += 4
+    }
+    if (makesCalls) {
+        sb.append("stw %30, %sp[$offset]\n")
+        offset += 4
+    }
+    if (hasLocalStackVars)
+        sb.append("ld %28, %sp\n")
+}
+
+private fun CodeBlock.teardownStackFrame(sb:StringBuilder) {
+    val makesCalls = prog.any{it is InstrCall || it is InstrCallReg }
+    val stackSize = (if (maxRegister>8) 4*(maxRegister-8) else 0) + (if (makesCalls) 4 else 0) + (if (hasLocalStackVars) 4 else 0)
+    if (stackSize==0)
+        return
+
+    var offset = 0
+    if (hasLocalStackVars)
+        sb.append("ld %sp, %28\n")
+    for(r in 9..maxRegister) {
+        sb.append("ldw %$r, %sp[$offset]\n")
+        offset += 4
+    }
+    if (hasLocalStackVars) {
+        sb.append("ldw %28, %sp[$offset]\n")
+        offset += 4
+    }
+    if (makesCalls) {
+        sb.append("ldw %30, %sp[$offset]\n")
+        offset += 4
+    }
+    sb.append("add %sp, %sp, $stackSize\n")
+
+}
+
+
 
 
 fun CodeBlock.genAssembly(sb:StringBuilder) {
     sb.append("$name:\n")
 
-    // setup stack frame
-    val makesCalls = prog.any{it is InstrCall || it is InstrCallReg }
-    val stackSize = (if (maxRegister>8) 4*(maxRegister-8) else 0) + (if (makesCalls) 4 else 0)
-    if (stackSize!=0) {
-        sb.append("sub %sp, %sp, $stackSize\n")
-        for(r in 9..maxRegister)
-            sb.append("stw %$r, %sp[${4*(r-9)}]\n")
-        if (makesCalls)
-            sb.append("stw %30, %sp[${stackSize-4}]\n")
-    }
+    setupStackFrame(sb)
 
     for(instr in prog) {
         if (instr is InstrStart || instr is InstrEnd)
@@ -137,14 +178,7 @@ fun CodeBlock.genAssembly(sb:StringBuilder) {
         sb.append("\n")
     }
 
-    // teardown stack frame
-    if (stackSize!=0) {
-        for(r in 9..maxRegister)
-            sb.append("ldw %$r, %sp[${4*(r-9)}]\n")
-        if (makesCalls)
-            sb.append("ldw %30, %sp[${stackSize-4}]\n")
-        sb.append("add %sp, %sp, $stackSize\n")
-    }
+    teardownStackFrame(sb)
     sb.append("ret\n")
 }
 

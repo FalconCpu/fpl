@@ -23,6 +23,7 @@ fun compile( files:List<Lexer>, stopAt: StopAt) : String {
 
     top.identifyClasses()
     top.identifyFunctions()
+    calculateMemberOffsets()
     top.generateIR()
 
     if (Log.allErrors.isNotEmpty())
@@ -46,7 +47,6 @@ fun compile( files:List<Lexer>, stopAt: StopAt) : String {
         return top.dumpIR()
 
     // Generate the final assembly
-    calculateMemberOffsets()
     val sb = StringBuilder()
     //genAssemblyHeader(sb)
     for (cb in allCodeBlocks)

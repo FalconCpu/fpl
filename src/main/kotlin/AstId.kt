@@ -8,6 +8,10 @@ class AstId(location: Location, private val name:String) : Ast(location) {
         val ret = context.lookup(location, name)
         if (ret is SymbolTypeName)
             return makeSymbolError(location, "Cannot use type name as expression")
+        if (cb.pathState.isUninitialized(ret))
+            Log.error(location, "Variable '$name' is uninitialized")
+        else if (cb.pathState.isMaybeUninitialized(ret))
+            Log.error(location, "Variable '$name' may be uninitialized")
         return ret
     }
 
@@ -18,9 +22,13 @@ class AstId(location: Location, private val name:String) : Ast(location) {
 
         when(symbol) {
             is SymbolLocalVar -> {
-                if (!symbol.mutable)
-                    Log.error(location, "Cannot assign to immutable variable")
+                if (!symbol.mutable && !cb.pathState.isUninitialized(symbol))
+                    if (cb.pathState.isMaybeUninitialized(symbol))
+                        Log.error(location, "Immutable variable '$name' may already be initialized")
+                    else
+                        Log.error(location, "Cannot assign to immutable variable")
                 cb.addMov(symbol, value)
+                cb.pathState = cb.pathState.removeUninitialized(symbol)
             }
 
             is SymbolGlobalVar -> {

@@ -31,7 +31,7 @@ class AstFuncCall(
         }
 
         if (funcSym is SymbolFunction)
-            cb.addCall(funcSym.function)
+            cb.addCall(funcSym.function.codeBlock)
         else
             cb.addCallR(funcSym)
 

@@ -10,9 +10,10 @@ class CodeBlock(val name:String) {
     val prog = mutableListOf<Instr>(InstrStart())
     val symbols = allSymbolReg.toMutableList<Symbol>()
     val labels = mutableListOf<Label>()
+    var hasLocalStackVars = false  // Used to track if we need to allocate a frame pointer
 
     // During the ast tree walk - keep track of what is known about the state of variables
-    var pathState = PathState(emptySet(), emptyMap(), false)
+    var pathState = PathState(emptySet(), emptySet(), emptyMap(), false)
     var pathStateTrue = pathState
     var pathStateFalse = pathState
 
@@ -119,7 +120,7 @@ class CodeBlock(val name:String) {
         add(InstrBra(op, label, lhs, rhs))
     }
 
-    fun addCall(func:AstFunction) {
+    fun addCall(func:CodeBlock) {
         add(InstrCall(func))
     }
 

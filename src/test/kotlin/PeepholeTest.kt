@@ -12,7 +12,7 @@ class PeepholeTest {
     @Test
     fun sumArray() {
         val prog = """
-            fun sum(array:Int[])->Int
+            fun sum(array:Array<Int>)->Int
                 var sum = 0
                 var index = 0
                 while index < 10
@@ -54,5 +54,71 @@ class PeepholeTest {
         """.trimIndent()
         runTest(prog,expected)
     }
+
+    @Test
+    fun nullableAnd() {
+        val prog = """
+            class LinkedList(val next:LinkedList?, val item:Int)
+
+            fun foo(var list:LinkedList?)->Int
+                if list!= null and list.item > 0     # this should not give an error as guarded by a null check
+                    return 1
+                else
+                    return 0
+            """.trimIndent()
+
+        val expected = """
+            *****************************************************
+                          TopLevel
+            *****************************************************
+            START
+            END
+
+            *****************************************************
+                          LinkedList
+            *****************************************************
+            START
+            MOV this, %1
+            MOV &0, %2
+            STW &0, this[next]
+            MOV &1, %3
+            STW &1, this[item]
+            END
+
+            *****************************************************
+                          foo
+            *****************************************************
+            START
+            MOV list, %1
+            BEQ_I list, 0, @5
+            LDW &0, list[item]
+            BLTE_I &0, 0, @5
+            MOV %8, 1
+            JMP @0
+            @5:
+            MOV %8, 0
+            @0:
+            END
+
+
+        """.trimIndent()
+
+        runTest(prog, expected)
+    }
+
+    @Test
+    fun localArray() {
+        val prog = """
+            fun foo()->Int
+                val a = local Array<Int>(10)
+                a[3] = 4
+                return a[3]
+        """.trimIndent()
+
+        val expected = """
+        """.trimIndent()
+        runTest(prog,expected)
+    }
+
 
 }

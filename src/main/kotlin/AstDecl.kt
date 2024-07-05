@@ -26,6 +26,8 @@ class AstDecl (
             if (!symbol.type.isTypeCompatible(rhs))
                 Log.error(location, "Cannot assign value of type ${rhs.type} to variable of type ${symbol.type}")
             cb.addMov( symbol, rhs)
+        } else {
+            cb.pathState = cb.pathState.addUninitialized(symbol)
         }
     }
 
