@@ -154,11 +154,21 @@ class Parser(private val lexer: Lexer) {
         return ret
     }
 
+    private fun parseRange() : Ast {
+        val ret = parseAdd()
+        if (canTake(DOTDOT)) {
+            val inclusive = ! canTake(LT)
+            val end = parseAdd()
+            return AstRange(Location(ret.location, end.location), ret, end, inclusive)
+        }
+        return ret
+    }
+
     private fun parseComp() : Ast {
-        var ret = parseAdd()
+        var ret = parseRange()
         while(lookahead.kind in listOf(EQ,NEQ,LT,LTE,GT,GTE)) {
             val op = nextToken()
-            ret = AstComp(op.location, op.kind, ret, parseAdd())
+            ret = AstComp(op.location, op.kind, ret, parseRange())
         }
         return ret
     }
@@ -241,7 +251,6 @@ class Parser(private val lexer: Lexer) {
             return AstQmark(Location(ret.location,qm.location), ret)
         }
         return ret
-
     }
 
     private fun parseOptExpr() : Ast? {
@@ -329,6 +338,27 @@ class Parser(private val lexer: Lexer) {
         block.add(cls)
     }
 
+    private fun parseIdList(): List<AstId> {
+        val ret = mutableListOf<AstId>()
+        expect(INDENT)
+        while (lookahead.kind != DEDENT && lookahead.kind != EOF) {
+            val id = expect(ID)
+            ret += AstId(id.location, id.text)
+            expectEol()
+        }
+        expect(DEDENT)
+        return ret
+    }
+
+    private fun parseEnum(block: AstBlock) {
+        expect(ENUM)
+        val id = expect(ID)
+        expectEol()
+        val members = parseIdList()
+        checkEnd(ENUM)
+        block.add(AstEnum(id.location, id.text, members))
+    }
+
     private fun parseBlock(block:AstBlock) {
         if (lookahead.kind!=INDENT) {
             Log.error(lookahead.location,"Expected indented block")
@@ -391,12 +421,9 @@ class Parser(private val lexer: Lexer) {
         val f = expect(FOR)
         val id = expect(ID)
         expect(IN)
-        val expr1 = parseExpression()
-        expect(DOTDOT)
-        val includeEnd = canTake(LT)
-        val expr2 = parseExpression()
+        val expr = parseExpression()
         expectEol()
-        val stmt = AstFor(f.location, block, id.text, expr1, expr2, includeEnd)
+        val stmt = AstFor(f.location, block, id.text, expr)
         block.add(stmt)
         parseBlock(stmt)
         checkEnd(FOR)
@@ -442,6 +469,7 @@ class Parser(private val lexer: Lexer) {
             CLASS -> parseClass(block)
             FOR -> parseFor(block)
             REPEAT -> parseRepeat(block)
+            ENUM -> parseEnum(block)
             else -> throw ParseError(lookahead.location,"Got '$lookahead' when expecting statement")
         }
     }

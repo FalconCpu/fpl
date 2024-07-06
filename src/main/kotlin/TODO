@@ -2,16 +2,23 @@ null-member access
 unary minus
 unary not
 and/or operator
-
-
+enums
+stack variable
 Array Constructor
+Common subexpression elimination
+range as a type
+
+Global variables
 free operator
 Array initializer
 Member function
 virtual function
 nullish coalescing operator
 conditional operator
-enums
-stack variable
+enum with values
+for loop with iterator
+Deal with what happens when a range is used as a value
++= -= etc
 
-Common subexpression elimination
+FIX BUG IN CSE - its removing temps that get used in STORE instructions
+

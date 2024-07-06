@@ -9,8 +9,21 @@ class AstMember (
         lhs.dump(sb, indent + 1)
     }
 
+    private fun codeGenTypeAccess(lhs:SymbolTypeName): Symbol {
+        return when(lhs.type) {
+            is TypeEnum ->
+                lhs.type.members.find { it.name == name } ?:
+                    makeSymbolError(location, "Enum $lhs does not have member $name")
+            else -> return makeSymbolError(location, "Cannot access member $name of type ${lhs.type}")
+        }
+    }
+
     override fun codeGenExpression(cb: CodeBlock, context: AstBlock): Symbol {
-        val l = lhs.codeGenExpression(cb, context)
+        val l = lhs.codeGenExpressionOrTypeName(cb, context)
+
+        if (l is SymbolTypeName)
+            return codeGenTypeAccess(l)     // LHS is a type name
+
         return when (val lt = cb.pathState.getType(l)) {
             is TypeError -> l
 

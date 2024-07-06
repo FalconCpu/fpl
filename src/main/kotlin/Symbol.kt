@@ -38,13 +38,21 @@ class SymbolTypeName(name:String, type: Type)
 class SymbolTemp(name: String, type: Type, var expression: Expression)
     : Symbol(name, type) {
 
+    // dependsOn analysis for pre-code gen stage - based on Expression
+    // DO NOT USE THIS IN CODE GEN - once the optimisation pass has run, this will be incorrect!
     override fun dependsOn(other: Symbol): Boolean {
         return other==this || expression.lhs.dependsOn(other) || expression.rhs.dependsOn(other)
     }
+
+    // For dependency analysis during optimisation - we build a set of all symbols that this symbol depends on
+    val dep : MutableSet<Symbol> = mutableSetOf()
 }
 
 class SymbolError
     : Symbol("<ERROR>", TypeError)
+
+class SymbolRange(name: String, type: TypeRange, val start: Symbol, val end:Symbol)
+    : Symbol(name, type)
 
 class SymbolReg(name: String) : Symbol(name, TypeInt)
 

@@ -15,9 +15,14 @@ class AstTop(
     }
 
     override fun add(statement: Ast) {
-        if (statement !is AstDecl && statement !is AstFunction && statement !is AstClass && statement !is AstConst)
-            Log.error(statement.location, "Invalid statement in top level")
-        statements += statement
+        when(statement) {
+            is AstDecl,
+            is AstFunction,
+            is AstClass,
+            is AstConst,
+            is AstEnum -> statements += statement
+            else ->   Log.error(statement.location, "Invalid statement in top level")
+        }
     }
 
     fun generateIR() {
@@ -45,6 +50,7 @@ class AstTop(
         for (statement in statements)
             if (statement is AstClass)
                 statement.identifyClass(this)
-
+            else if (statement is AstEnum)
+                statement.identifyEnum(this)
     }
 }

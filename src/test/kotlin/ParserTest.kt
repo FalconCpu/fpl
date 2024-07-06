@@ -449,8 +449,9 @@ class ParserTest {
                 var total
                   INTLIT 0
                 FOR i
-                  INTLIT 1
-                  INTLIT 10
+                  RANGE
+                    INTLIT 1
+                    INTLIT 10
                   ASSIGN
                     ID total
                     +
@@ -530,7 +531,33 @@ class ParserTest {
         runTest(prog,expected)
     }
 
+    @Test
+    fun enumTest() {
+        val prog = """
+            enum Color
+                RED
+                GREEN
+                BLUE
+                
+            fun main()->Color
+                return Color.RED
+        """.trimIndent()
 
+        val expected = """
+            TOP
+              ENUM Color
+                ID RED
+                ID GREEN
+                ID BLUE
+              FUNC main
+                ID Color
+                RETURN
+                  MEMBER RED
+                    ID Color
 
+            """.trimIndent()
+
+        runTest(prog, expected)
+    }
 
 }

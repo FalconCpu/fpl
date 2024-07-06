@@ -123,16 +123,45 @@ class GenAssemblyTest {
             stw %28, %sp[0]
             ld %28, %sp
             sub %sp, %sp, 40
+            ld %1, 4
+            stw %1, %sp[12]
             ld %8, 4
-            stw %8, %sp[12]
-            ldw %8, %sp[12]
             ld %sp, %28
             ldw %28, %sp[0]
             add %sp, %sp, 4
             ret
 
+
         """.trimIndent()
         runTest(prog,expected)
+    }
+
+    @Test
+    fun globalVarTest() {
+        val prog = """
+            var a = 0
+            var b : Int       # should get default value of 0
+            fun main()->Int
+                a=a+1
+                return a+b
+        """.trimIndent()
+
+        val expected = """
+            TopLevel:
+            stw 0, %29[0]
+            stw 0, %29[4]
+            ret
+            main:
+            ldw %1, %29[0]
+            add %1, %1, 1
+            stw %1, %29[0]
+            ldw %2, %29[4]
+            add %8, %1, %2
+            ret
+
+            
+        """.trimIndent()
+        runTest(prog, expected)
     }
 
 

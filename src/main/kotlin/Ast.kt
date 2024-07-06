@@ -9,6 +9,10 @@ abstract class Ast (val location: Location) {
         error("${this.javaClass} not supported in code generation as expression")
     }
 
+    open fun codeGenExpressionOrTypeName(cb: CodeBlock, context: AstBlock): Symbol {
+        return codeGenExpression(cb,context)
+    }
+
     open fun codeGenLValue(cb: CodeBlock, context:AstBlock, value:Symbol) {
         error("${this.javaClass} not supported in code generation as lvalue")
     }

@@ -40,4 +40,15 @@ sealed class AstBlock (
         return null
     }
 
+    fun calculateGlobalOffsets() {
+        var offset = 0
+        for(sym in symbolTable.values) {
+            if (sym is SymbolGlobalVar) {
+                sym.offset = offset
+                offset += sym.type.getSize()
+                offset = ((offset-1) or 3) +1 // Align to 4 bytes
+            }
+        }
+    }
+
 }

@@ -14,7 +14,7 @@ object TypeUnit   : Type("Unit")
 object TypeAddress : Type("<Address>")
 
 class TypeArray(val base:Type)
-    : Type("$base[]")
+    : Type("Array<$base>")
 
 class TypeNullable(val base:Type)
     : Type("$base?")
@@ -27,6 +27,13 @@ class TypeClass(name:String, val astClass: AstClass)
         val members = mutableListOf<Symbol>()
         var size = 0
     }
+
+class TypeEnum(name: String)
+     : Type(name) {
+    val members = mutableListOf<SymbolIntLit>()
+}
+
+class TypeRange(val base:Type, val inclusive: Boolean) : Type("Range<$base>")
 
 val allTypeArray = mutableListOf<TypeArray>()
 fun makeTypeArray(base:Type): TypeArray {
@@ -63,6 +70,15 @@ fun makeTypeClass(name: String, astClass: AstClass): TypeClass {
     val ret = TypeClass(name, astClass)
     allTypeClass += ret
     return ret
+}
+
+val allTypeRange = mutableListOf<TypeRange>()
+fun makeTypeRange(base: Type, inclusive: Boolean): TypeRange {
+    return allTypeRange.find { it.base == base && it.inclusive == inclusive } ?: run {
+        val new = TypeRange(base, inclusive)
+        allTypeRange += new
+        new
+    }
 }
 
 fun calculateMemberOffsets() {
@@ -128,9 +144,31 @@ fun Type.getSize(): Int = when (this) {
     TypeReal -> 8
     TypeString -> 4
     TypeAddress -> 4
+    is TypeRange -> 8
+    is TypeEnum -> 4
     is TypeArray -> 4
     is TypeFunction -> 4
     is TypeNullable -> 4
     is TypeClass -> 4
+}
+
+fun Type.isEnumerable(): Boolean = when (this) {
+    TypeAddress,
+    is TypeArray,
+    is TypeClass,
+    is TypeFunction,
+    TypeNull,
+    is TypeNullable,
+    is TypeRange,
+    TypeReal,
+    TypeUnit,
+    TypeString -> false
+
+    TypeBool,
+    TypeChar,
+    is TypeEnum,
+    TypeError,
+    TypeInt,
+    TypeShort -> true
 }
 

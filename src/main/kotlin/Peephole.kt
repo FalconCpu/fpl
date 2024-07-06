@@ -4,7 +4,7 @@ import java.util.*
 class Peephole(private val cb: CodeBlock) {
     private val prog = cb.prog
 
-    private val debug = true
+    private val debug = false
     private var madeChange = false
     private lateinit var availableMap : Array<BitSet>
 
@@ -253,6 +253,15 @@ class Peephole(private val cb: CodeBlock) {
             changeToNop(this)
     }
 
+    private fun InstrStore.peephole() {
+        // Look for stores of value zero
+        if (data.isVar()) {
+            val dataConst = data.varHasConstantValue()
+            if (dataConst != null && dataConst.value == 0)
+                replaceWith(InstrStore(size, symbolZero, a, offset))
+        }
+    }
+
     /**
      * Finds instruction specific peephole optimizations.
      */
@@ -265,6 +274,7 @@ class Peephole(private val cb: CodeBlock) {
             is InstrJmp -> peephole()
             is InstrBra -> peephole()
             is InstrLabel -> peephole()
+            is InstrStore -> peephole()
             else -> {}
         }
     }
@@ -312,6 +322,13 @@ class Peephole(private val cb: CodeBlock) {
         // sanity check - make sure any temps used in the instruction are available
         if (a is SymbolTemp)
             check(availableMap[index][a.index])
+
+        if (dest is SymbolTemp && availableMap[index][dest.index]) {
+            if (debug)
+                println("CSE: $this")
+            changeToNop(index)
+        }
+
 
         // Look to see if the source comes from an add to literal
         if (a is SymbolTemp && offset is SymbolIntLit) {

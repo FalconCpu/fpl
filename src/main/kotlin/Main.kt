@@ -25,6 +25,7 @@ fun compile( files:List<Lexer>, stopAt: StopAt) : String {
     top.identifyFunctions()
     calculateMemberOffsets()
     top.generateIR()
+    top.calculateGlobalOffsets()
 
     if (Log.allErrors.isNotEmpty())
         return Log.allErrors.joinToString(separator = "\n")

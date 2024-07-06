@@ -16,19 +16,25 @@ class AstDecl (
         val rhs = init?.codeGenExpression(cb, context)
         val type = type?.resolveType(context) ?: rhs?.type ?: makeTypeError(location,"Cannot determine type of $name")
         val mutable = kind == TokenKind.VAR
-        val symbol = if (context is AstTop)
-            SymbolGlobalVar(name, type, mutable)
-        else
-            SymbolLocalVar(name, type, mutable)
+
+        if (rhs!=null && !type.isTypeCompatible(rhs))
+            Log.error(location, "Cannot assign value of type ${rhs.type} to variable of type $type")
+
+        val symbol:Symbol
+
+        if (context is AstTop) {
+            symbol = SymbolGlobalVar(name, type, mutable)
+            cb.addStore(symbol.type, rhs ?: symbolZero, cb.getReg(29), symbol)
+        } else {
+            symbol = SymbolLocalVar(name, type, mutable)
+            if (rhs!=null)
+                cb.addMov( symbol, rhs)
+            else
+                cb.pathState = cb.pathState.addUninitialized(symbol)
+        }
+
         context.add(location, symbol)
         cb.add(symbol)
-        if (rhs != null) {
-            if (!symbol.type.isTypeCompatible(rhs))
-                Log.error(location, "Cannot assign value of type ${rhs.type} to variable of type ${symbol.type}")
-            cb.addMov( symbol, rhs)
-        } else {
-            cb.pathState = cb.pathState.addUninitialized(symbol)
-        }
     }
 
     fun codeGenMember(cb: CodeBlock, context: AstClass) {

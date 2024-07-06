@@ -1,18 +1,38 @@
-class AstId(location: Location, private val name:String) : Ast(location) {
+class AstId(location: Location, val name:String) : Ast(location) {
 
     override fun dump(sb: StringBuilder, indent: Int) {
         sb.append("  ".repeat(indent) + "ID $name\n")
     }
 
-    override fun codeGenExpression(cb: CodeBlock, context: AstBlock): Symbol {
+    override fun codeGenExpressionOrTypeName(cb: CodeBlock, context: AstBlock): Symbol {
         val ret = context.lookup(location, name)
-        if (ret is SymbolTypeName)
-            return makeSymbolError(location, "Cannot use type name as expression")
         if (cb.pathState.isUninitialized(ret))
             Log.error(location, "Variable '$name' is uninitialized")
         else if (cb.pathState.isMaybeUninitialized(ret))
             Log.error(location, "Variable '$name' may be uninitialized")
         return ret
+    }
+
+
+    override fun codeGenExpression(cb: CodeBlock, context: AstBlock): Symbol {
+        val ret = codeGenExpressionOrTypeName(cb, context)
+        return when(ret) {
+            is SymbolError,
+            is SymbolFunction,
+            is SymbolIntLit,
+            is SymbolRange,
+            is SymbolStringLit,
+            is SymbolLocalVar -> ret
+
+            is SymbolGlobalVar -> cb.addLoad(ret.type, cb.getReg(29), ret)
+
+            is SymbolMember -> TODO()
+
+            is SymbolTypeName -> makeSymbolError(location, "Cannot use type name as expression")
+
+            is SymbolReg,
+            is SymbolTemp -> error("Symbol kind should not be in AST")
+        }
     }
 
     override fun codeGenLValue(cb: CodeBlock, context: AstBlock, value: Symbol) {
@@ -34,13 +54,14 @@ class AstId(location: Location, private val name:String) : Ast(location) {
             is SymbolGlobalVar -> {
                 if (!symbol.mutable)
                     Log.error(location, "Cannot assign to immutable variable")
-                TODO("Write to global variable")
+                cb.addStore(value.type, value, cb.getReg(29), symbol)
             }
 
             is SymbolMember -> TODO()
 
             is SymbolError -> {}
 
+            is SymbolRange,
             is SymbolReg,
             is SymbolFunction,
             is SymbolIntLit,

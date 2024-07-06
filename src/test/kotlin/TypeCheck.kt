@@ -946,5 +946,76 @@ class TypeCheck {
         runTest(prog,expected)
     }
 
+    @Test
+    fun enumTest() {
+        val prog = """
+            enum Color
+                RED
+                GREEN
+                BLUE
+                
+            fun main()->Color
+                return Color.RED
+        """.trimIndent()
+
+        val expected = """
+                *****************************************************
+                              TopLevel
+                *****************************************************
+                START
+                END
+
+                *****************************************************
+                              main
+                *****************************************************
+                START
+                MOV %8, 0
+                JMP @0
+                @0:
+                END
+
+
+            """.trimIndent()
+
+        runTest(prog, expected)
+    }
+
+    @Test
+    fun globalVarTest() {
+        val prog = """
+            var a = 0
+            fun main()->Int
+                a=a+1
+                return a
+        """.trimIndent()
+
+        val expected = """
+            *****************************************************
+                          TopLevel
+            *****************************************************
+            START
+            MOV &0, 0
+            STW &0, %29[a]
+            END
+
+            *****************************************************
+                          main
+            *****************************************************
+            START
+            LDW &0, %29[a]
+            ADD_I &1, &0, 1
+            MOV &0, &1
+            STW &0, %29[a]
+            LDW &0, %29[a]
+            MOV %8, &0
+            JMP @0
+            @0:
+            END
+
+            
+        """.trimIndent()
+        runTest(prog, expected)
+    }
+
 
 }

@@ -131,14 +131,51 @@ class PeepholeTest {
             MOV a, &0
             MOV &3, 4
             STW &3, a[12]
-            LDW &3, a[12]
-            MOV %8, &3
+            MOV %8, 4
             END
 
 
         """.trimIndent()
         runTest(prog,expected)
     }
+
+    @Test
+    fun globalVarTest() {
+        val prog = """
+            var a = 0
+            var b : Int       # should get default value of 0
+            fun main()->Int
+                a=a+1
+                return a+b
+        """.trimIndent()
+
+        val expected = """
+            *****************************************************
+                          TopLevel
+            *****************************************************
+            START
+            STW 0, %29[a]
+            STW 0, %29[b]
+            END
+
+            *****************************************************
+                          main
+            *****************************************************
+            START
+            LDW &0, %29[a]
+            ADD_I &1, &0, 1
+            MOV &0, &1
+            STW &0, %29[a]
+            LDW &2, %29[b]
+            ADD_I &3, &0, &2
+            MOV %8, &3
+            END
+
+            
+        """.trimIndent()
+        runTest(prog, expected)
+    }
+
 
 
 }
